@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="fr" data-preload>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>LumaAnime — catalogue, calendrier et suivi d'animes</title>
+<meta name="description" content="Explore les animes de la saison, le classement AniList, le calendrier de diffusion au Japon, et garde ta watchlist et tes favoris sur ton compte.">
+<meta name="theme-color" content="#0D0D13">
+<link rel="icon" href="assets/logos/favicon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
+<link rel="preconnect" href="https://graphql.anilist.co" crossorigin>
+<link rel="preconnect" href="https://s4.anilist.co">
+<link rel="preload" href="assets/fonts/unbounded-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css?v=20260926o">
+<link rel="stylesheet" href="css/pages.css?v=20260926o">
+<script src="js/theme-boot.js?v=20260926o"></script>
+</head>
+<body data-page="accueil">
+<a class="skip-link" href="#contenu">Aller au contenu principal</a>
+<header class="site-header" data-site-header></header>
+<script src="js/layout.js?v=20260926o"></script>
+<main id="contenu" tabindex="-1">
+  <h1 class="sr-only">LumaAnime : catalogue, calendrier de diffusion et suivi d'animes</h1>
+  <section class="hero" data-hero aria-roledescription="carrousel" aria-label="À l'affiche : les mieux notés en cours de diffusion">
+    <div class="hero-slides" data-hero-slides aria-live="off">
+      <div class="wrap hero-loading" aria-hidden="true">
+        <div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+      </div>
+    </div>
+    <div class="wrap hero-controls">
+      <ol class="hero-index" data-hero-index aria-label="Choisir une diapositive (glisse pour voir la suite)"></ol>
+    </div>
+  </section>
+  <section class="section" data-continue-section hidden aria-labelledby="continue-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Ta progression</p>
+        <h2 class="section-title" id="continue-title" tabindex="-1">Reprendre la lecture</h2>
+      </div>
+      <ul class="continue-list" data-continue-list></ul>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="top-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Classement LumaAnime</p>
+        <h2 class="section-title" id="top-title">Top 10 des plus vus</h2>
+        <p class="section-desc">Les animes les plus consultés sur LumaAnime.</p>
+      </div>
+      <ol class="podium" data-top-podium aria-label="Numéros 1 à 3">
+        <li class="podium-item skeleton-row" aria-hidden="true"><div class="skeleton skeleton-poster"></div></li>
+        <li class="podium-item skeleton-row" aria-hidden="true"><div class="skeleton skeleton-poster"></div></li>
+        <li class="podium-item skeleton-row" aria-hidden="true"><div class="skeleton skeleton-poster"></div></li>
+      </ol>
+      <ol class="top-list" start="4" data-top-list aria-label="Numéros 4 à 10"></ol>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="season-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Saison en cours</p>
+        <h2 class="section-title" id="season-title">Les animes de la saison</h2>
+        <p class="section-desc">Les titres diffusés au Japon cette saison, d'après AniList.</p>
+        <a class="link-arrow section-action" href="simulcast.html"><span>Voir toute la saison</span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></a>
+      </div>
+      <ul class="card-grid" data-home-grid aria-label="Animes de la saison en cours"></ul>
+    </div>
+  </section>
+  <section class="section" aria-labelledby="genres-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Navigue autrement</p>
+        <h2 class="section-title" id="genres-title">Choisis un genre</h2>
+      </div>
+      <ul class="genre-grid">
+        <li><a class="genre-tile genre-tile--action" href="catalogue.html?genre=Action"><span>Action</span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></a></li>
+        <li><a class="genre-tile genre-tile--romance" href="catalogue.html?genre=Romance"><span>Romance</span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></a></li>
+        <li><a class="genre-tile genre-tile--comedie" href="catalogue.html?genre=Comedy"><span>Comédie</span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></a></li>
+        <li><a class="genre-tile genre-tile--isekai" href="catalogue.html?tag=Isekai"><span>Isekai</span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></a></li>
+        <li><a class="genre-tile genre-tile--seinen" href="catalogue.html?tag=Seinen"><span>Seinen</span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></a></li>
+        <li><a class="genre-tile genre-tile--sport" href="catalogue.html?genre=Sports"><span>Sport</span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></a></li>
+        <li><a class="genre-tile genre-tile--horreur" href="catalogue.html?genre=Horror"><span>Horreur</span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></a></li>
+        <li><a class="genre-tile genre-tile--tranche-de-vie" href="catalogue.html?genre=Slice%20of%20Life"><span>Tranche de vie</span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></a></li>
+        <li><a class="genre-tile genre-tile--fantasy" href="catalogue.html?genre=Fantasy"><span>Fantasy</span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></a></li>
+        <li><a class="genre-tile genre-tile--mecha" href="catalogue.html?genre=Mecha"><span>Mecha</span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></a></li>
+      </ul>
+    </div>
+  </section>
+  <section class="section plans-section" aria-labelledby="plans-title">
+    <div class="wrap">
+      <div class="section-head">
+        <p class="eyebrow">Gratuit pour toujours</p>
+        <h2 class="section-title" id="plans-title">Soutenir LumaAnime</h2>
+        <p class="section-desc">Le site reste gratuit. Les formules Premium se paient une seule fois, sans abonnement, et financent l'hébergement.</p>
+      </div>
+      <ul class="plans">
+        <li class="plan">
+          <h3>Gratuit</h3>
+          <p class="plan-price">0 € <small>sans limite de durée</small></p>
+          <p class="plan-desc">Tout le site, sans payer.</p>
+          <ul>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#chevron-right"></use></svg>Catalogue, fiches et calendrier</li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#chevron-right"></use></svg>Watchlist et favoris</li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#chevron-right"></use></svg>Anime Coins et succès</li>
+          </ul>
+          <a class="btn btn-block" href="inscription.html">Créer un compte gratuit</a>
+        </li>
+        <li class="plan plan--featured">
+          <h3>Soutien</h3>
+          <p class="plan-price">3,90 € <small>pour 30 jours</small></p>
+          <p class="plan-coins">ou 1 500 Anime Coins</p>
+          <ul>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#chevron-right"></use></svg>Zéro publicité</li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#chevron-right"></use></svg>Lecture en avance sur certains titres</li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#chevron-right"></use></svg>Badge de soutien sur ton profil</li>
+          </ul>
+          <a class="btn btn-block" href="premium.html">Découvrir Soutien</a>
+        </li>
+        <li class="plan">
+          <h3>Soutien +</h3>
+          <p class="plan-price">46,80 € <small>à vie</small></p>
+          <p class="plan-coins">ou 15 000 Anime Coins</p>
+          <ul>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#chevron-right"></use></svg>Tous les avantages Soutien</li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#chevron-right"></use></svg>Téléchargement hors-ligne</li>
+            <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#chevron-right"></use></svg>Support prioritaire</li>
+          </ul>
+          <a class="btn btn-block" href="premium.html">Découvrir Soutien +</a>
+        </li>
+      </ul>
+          <a class="btn btn-block" href="premium.html">Découvrir la formule Soutien +</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+</main>
+<footer class="site-footer" data-site-footer></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
+<script src="js/supabase-config.js?v=20260926o"></script>
+<script src="js/supabase-client.js?v=20260926o"></script>
+<script src="js/premium.js?v=20260926o"></script>
+<script src="js/ui.js?v=20260926o"></script>
+<script src="js/data.js?v=20260926o"></script>
+<script src="js/preload.js?v=20260926o"></script>
+<script src="js/watchlist.js?v=20260926o"></script>
+<script src="js/api.js?v=20260926o"></script>
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="fr" data-preload>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anime Coins — LumaAnime</title>
+<meta name="description" content="Gagne des Anime Coins chaque jour et échange-les contre du Premium.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0D0D13">
+<link rel="icon" href="assets/logos/favicon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
+<link rel="preconnect" href="https://graphql.anilist.co" crossorigin>
+<link rel="preconnect" href="https://s4.anilist.co">
+<link rel="preload" href="assets/fonts/unbounded-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css?v=20260926o">
+<link rel="stylesheet" href="css/pages.css?v=20260926o">
+<script src="js/theme-boot.js?v=20260926o"></script>
+</head>
+<body data-page="coins">
+<a class="skip-link" href="#contenu">Aller au contenu principal</a>
+<header class="site-header" data-site-header></header>
+<script src="js/layout.js?v=20260926o"></script>
+<main id="contenu" tabindex="-1">
+  <section class="page-head">
+    <div class="wrap page-head-grid">
+      <p class="page-kana" aria-hidden="true">コイン</p>
+      <div>
+        <nav class="breadcrumb" aria-label="Fil d'Ariane"><ol><li><a href="index.html">Accueil</a></li><li aria-current="page">Anime Coins</li></ol></nav>
+        <h1 class="page-title">Anime Coins</h1>
+        <p class="page-lead">Gagne des Anime Coins en revenant chaque jour et en complétant des succès, puis échange-les contre du Premium. Ils sont volontairement rares.</p>
+      </div>
+    </div>
+  </section>
+  <div class="wrap section" data-coins-guard hidden></div>
+  <div class="wrap section" data-coins-content hidden>
+    <div class="coins-top">
+      <div class="balance-card">
+        <p class="eyebrow">Ton solde</p>
+        <p class="balance-value" data-coins-balance></p>
+        <p class="streak-line" data-coins-streak></p>
+      </div>
+      <div class="daily-card" aria-labelledby="daily-title">
+        <p class="eyebrow" id="daily-title">Récompense du jour</p>
+        <div class="stack-sm" data-daily></div>
+      </div>
+    </div>
+    <section class="section" id="boutique" aria-labelledby="shop-title">
+      <div class="section-head">
+        <p class="eyebrow">Boutique</p>
+        <h2 class="section-title" id="shop-title">Échanger mes coins contre du Premium</h2>
+        <p class="section-desc">Les coins dépensés sont retirés immédiatement de ton solde. Un Soutien acheté pendant un Soutien en cours ajoute 30 jours à la date d'expiration.</p>
+      </div>
+      <ul class="shop" data-coins-shop></ul>
+    </section>
+    <section class="section" aria-labelledby="ach-title">
+      <div class="section-head">
+        <p class="eyebrow">Défis</p>
+        <h2 class="section-title" id="ach-title">Succès</h2>
+        <p class="section-desc">42 défis, du plus simple au légendaire. Plus un succès est difficile, plus il rapporte. Chacun ne rapporte qu'une seule fois, et le pourcentage indique la part des membres qui l'ont déjà obtenu.</p>
+      </div>
+      <div class="ach-summary" data-ach-summary></div>
+      <div class="ach-filters" data-ach-filters role="group" aria-label="Filtrer les succès par catégorie"></div>
+      <ul class="ach-grid" data-coins-achievements></ul>
+    </section>
+    <div class="mp-grid section">
+      <section aria-labelledby="rules-title">
+        <div class="section-head">
+          <p class="eyebrow">Fonctionnement</p>
+          <h2 class="section-title" id="rules-title">Règles des Anime Coins</h2>
+        </div>
+        <ul class="info-list">
+          <li>Récompense quotidienne : 10 AC, puis 2 AC de plus par jour consécutif, jusqu'à 30 AC par jour.</li>
+          <li>Bonus de série : 50 AC tous les 7 jours consécutifs, et 150 AC tous les 30 jours.</li>
+          <li>Une seule récompense par jour. La journée change à minuit, heure de Paris.</li>
+          <li>Un jour manqué est toléré : ta série ne progresse pas mais n'est pas perdue. À partir de deux jours manqués, elle repart à 1.</li>
+          <li>Des clés d'Anime Coins sont parfois distribuées lors d'événements. Elles s'activent comme une clé Premium, dans Paramètres → Premium.</li>
+          <li>Une série parfaite rapporte environ 1 150 à 1 250 AC par mois : il faut donc environ six semaines pour Soutien, et près d'un an pour Soutien +.</li>
+          <li>Les Anime Coins n'ont aucune valeur en argent : ils ne s'achètent pas, ne se revendent pas et ne se transfèrent pas entre comptes.</li>
+        </ul>
+      </section>
+      <section aria-labelledby="ledger-title">
+        <div class="section-head">
+          <p class="eyebrow">Historique</p>
+          <h2 class="section-title" id="ledger-title">Derniers mouvements</h2>
+        </div>
+        <ul class="ledger" data-coins-ledger></ul>
+      </section>
+    </div>
+  </div>
+</main>
+<footer class="site-footer" data-site-footer></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
+<script src="js/supabase-config.js?v=20260926o"></script>
+<script src="js/supabase-client.js?v=20260926o"></script>
+<script src="js/premium.js?v=20260926o"></script>
+<script src="js/ui.js?v=20260926o"></script>
+<script src="js/data.js?v=20260926o"></script>
+<script src="js/preload.js?v=20260926o"></script>
+<script src="js/pages/coins.js?v=20260926o"></script>
+</body>
+</html>

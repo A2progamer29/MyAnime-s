@@ -1,0 +1,8 @@
+Modèle Supabase (Authentication → Emails → Templates) → fichier → sujet
+
+Confirm signup         → 1-confirmation-inscription.html        Sujet : Confirme ton compte LumaAnime
+Invite user            → 2-invitation.html                      Sujet : Ton invitation sur LumaAnime
+Magic Link             → 3-lien-de-connexion.html               Sujet : Ton lien de connexion LumaAnime
+Change Email Address   → 4-changement-adresse.html              Sujet : Confirme ta nouvelle adresse e-mail
+Reset Password         → 5-reinitialisation-mot-de-passe.html   Sujet : Réinitialise ton mot de passe LumaAnime
+Reauthentication       → 6-code-de-verification.html            Sujet : Ton code de vérification LumaAnime

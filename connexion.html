@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr" data-preload>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Connexion — LumaAnime</title>
+<meta name="description" content="Connecte-toi à ton compte LumaAnime.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0D0D13">
+<link rel="icon" href="assets/logos/favicon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
+<link rel="preconnect" href="https://graphql.anilist.co" crossorigin>
+<link rel="preconnect" href="https://s4.anilist.co">
+<link rel="preload" href="assets/fonts/unbounded-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css?v=20260926o">
+<link rel="stylesheet" href="css/pages.css?v=20260926o">
+<script src="js/theme-boot.js?v=20260926o"></script>
+</head>
+<body data-page="connexion">
+<a class="skip-link" href="#contenu">Aller au contenu principal</a>
+<header class="site-header" data-site-header></header>
+<script src="js/layout.js?v=20260926o"></script>
+<main id="contenu" tabindex="-1">
+  <div class="auth">
+    <aside class="auth-art" aria-labelledby="auth-art-title">
+      <div class="auth-wall" data-auth-wall aria-hidden="true"></div>
+      <div class="auth-art-content">
+        <p class="auth-art-kana" aria-hidden="true">ログイン</p>
+        <h2 class="auth-art-title" id="auth-art-title">Ta watchlist, tes favoris et ta progression, sur ton compte.</h2>
+        <ul class="auth-art-list">
+          <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#bookmark"></use></svg>Watchlist et favoris enregistrés</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#palette"></use></svg>Couleur du site au choix</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#user"></use></svg>Profil public facultatif</li>
+        </ul>
+      </div>
+    </aside>
+    <div class="auth-panel">
+      <div class="auth-card">
+        <h1>Connexion</h1>
+        <p class="auth-sub">Accède à ta watchlist, tes favoris et ta progression.</p>
+        <div class="state" data-already hidden>
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#user"></use></svg>
+          <strong>Tu es déjà connecté</strong>
+          <p>Connecté en tant que <span data-already-name></span>.</p>
+          <div class="auth-row">
+            <a class="btn btn-primary btn-sm" href="index.html">Aller à l'accueil</a>
+            <button class="btn btn-sm" type="button" data-already-logout>Se déconnecter</button>
+          </div>
+        </div>
+        <form id="login-form" class="form-stack" novalidate>
+          <div class="form-alert" role="alert" data-form-alert></div>
+          <div class="field">
+            <label class="label" for="login-email">Adresse e-mail</label>
+            <input class="input" id="login-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" required aria-describedby="login-email-error">
+            <p class="field-error" id="login-email-error"></p>
+          </div>
+          <div class="field">
+            <label class="label" for="login-password">Mot de passe</label>
+            <div class="input-group">
+              <input class="input" id="login-password" name="password" type="password" autocomplete="current-password" maxlength="72" required aria-describedby="login-password-error">
+              <button class="icon-btn" type="button" data-password-toggle="login-password"></button>
+            </div>
+            <p class="field-error" id="login-password-error"></p>
+            <a class="link" href="mot-de-passe.html">Mot de passe oublié ?</a>
+          </div>
+          <button class="btn btn-primary btn-lg btn-block" type="submit">Se connecter</button>
+          <p class="field-hint">Tu restes connecté sur cet appareil jusqu'à ce que tu te déconnectes.</p>
+        </form>
+        <p class="auth-switch">Pas encore de compte ? <a class="link" href="inscription.html">Créer un compte gratuit</a></p>
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="site-footer" data-site-footer></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
+<script src="js/supabase-config.js?v=20260926o"></script>
+<script src="js/supabase-client.js?v=20260926o"></script>
+<script src="js/premium.js?v=20260926o"></script>
+<script src="js/ui.js?v=20260926o"></script>
+<script src="js/data.js?v=20260926o"></script>
+<script src="js/preload.js?v=20260926o"></script>
+<script src="js/pages/connexion.js?v=20260926o"></script>
+</body>
+</html>

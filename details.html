@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr" data-preload>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Fiche anime — LumaAnime</title>
+<meta name="description" content="Fiche détaillée d'un anime : synopsis, informations, bande-annonce et plateformes légales (données AniList).">
+<meta name="theme-color" content="#0D0D13">
+<link rel="icon" href="assets/logos/favicon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
+<link rel="preconnect" href="https://graphql.anilist.co" crossorigin>
+<link rel="preconnect" href="https://s4.anilist.co">
+<link rel="preload" href="assets/fonts/unbounded-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css?v=20260926o">
+<link rel="stylesheet" href="css/pages.css?v=20260926o">
+<script src="js/theme-boot.js?v=20260926o"></script>
+</head>
+<body data-page="details">
+<a class="skip-link" href="#contenu">Aller au contenu principal</a>
+<header class="site-header" data-site-header></header>
+<script src="js/layout.js?v=20260926o"></script>
+<main id="contenu" tabindex="-1">
+  <div data-details>
+    <section class="detail-hero">
+      <div class="duotone" data-d-backdrop aria-hidden="true"></div>
+      <div class="wrap">
+        <nav class="breadcrumb" aria-label="Fil d'Ariane"><ol><li><a href="index.html">Accueil</a></li><li><a href="catalogue.html">Catalogue</a></li><li aria-current="page" data-d-crumb>Fiche</li></ol></nav>
+        <div class="detail-top">
+          <div class="poster-frame"><img data-d-poster alt="" width="260" height="368"></div>
+          <div class="detail-intro">
+            <p class="eyebrow" data-d-eyebrow>Fiche anime</p>
+            <h1 class="detail-title" data-d-title>Chargement de la fiche…</h1>
+            <p class="detail-alt" data-d-alt hidden></p>
+            <ul class="chip-list" data-d-chips></ul>
+            <div class="detail-actions" data-d-actions></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <div class="wrap detail-body">
+      <div class="detail-main">
+        <section class="detail-block detail-synopsis" data-d-synopsis-block aria-labelledby="synopsis-title">
+          <h2 id="synopsis-title">Synopsis</h2>
+          <p data-d-synopsis>Chargement du synopsis…</p>
+          <p class="lang-note" data-d-lang-note>Synopsis en anglais, fourni par AniList.</p>
+        </section>
+        <section class="detail-block" data-d-trailer-block aria-labelledby="trailer-title" hidden>
+          <h2 id="trailer-title">Bande-annonce</h2>
+          <div class="trailer-box" data-d-trailer></div>
+          <p class="lang-note">Vidéo officielle hébergée par YouTube. Rien n'est chargé depuis YouTube avant ton clic ; une fois la vidéo lancée, YouTube peut collecter des données de navigation.</p>
+        </section>
+      </div>
+      <div class="detail-side">
+        <aside class="detail-block" aria-labelledby="facts-title">
+          <h2 id="facts-title">Informations</h2>
+          <dl class="facts" data-d-facts></dl>
+        </aside>
+        <section class="detail-block" data-d-watch-block aria-labelledby="watch-title" hidden>
+          <h2 id="watch-title">Où regarder légalement</h2>
+          <ul class="watch-links" data-d-watch-links></ul>
+          <p class="lang-note">Plateformes officielles indiquées par AniList. Le catalogue de chaque plateforme dépend de ton pays.</p>
+        </section>
+      </div>
+      <section class="detail-block detail-episodes" aria-labelledby="episodes-title">
+        <h2 id="episodes-title">Épisodes</h2>
+        <div class="notice">
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#info"></use></svg>
+          <div class="notice-body">
+            <p><strong>Aucun épisode n'est disponible en vidéo sur LumaAnime.</strong> Pour regarder la série, passe par une plateforme officielle. La liste ci-dessous vient d'AniList, à titre d'information.</p>
+          </div>
+        </div>
+        <ol class="episode-list" data-d-episodes>
+          <li><span class="episode-num">…</span><span class="episode-title">Chargement des épisodes…</span></li>
+        </ol>
+        <p class="lang-note" data-d-episodes-note hidden></p>
+      </section>
+    </div>
+  </div>
+</main>
+<footer class="site-footer" data-site-footer></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
+<script src="js/supabase-config.js?v=20260926o"></script>
+<script src="js/supabase-client.js?v=20260926o"></script>
+<script src="js/premium.js?v=20260926o"></script>
+<script src="js/ui.js?v=20260926o"></script>
+<script src="js/data.js?v=20260926o"></script>
+<script src="js/preload.js?v=20260926o"></script>
+<script src="js/watchlist.js?v=20260926o"></script>
+<script src="js/api.js?v=20260926o"></script>
+</body>
+</html>

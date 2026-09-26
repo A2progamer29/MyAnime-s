@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="fr" data-preload>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paramètres — LumaAnime</title>
+<meta name="description" content="Ton profil, ton thème, ta watchlist et tes favoris.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0D0D13">
+<link rel="icon" href="assets/logos/favicon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
+<link rel="preconnect" href="https://graphql.anilist.co" crossorigin>
+<link rel="preconnect" href="https://s4.anilist.co">
+<link rel="preload" href="assets/fonts/unbounded-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css?v=20260926o">
+<link rel="stylesheet" href="css/pages.css?v=20260926o">
+<script src="js/theme-boot.js?v=20260926o"></script>
+</head>
+<body data-page="parametres">
+<a class="skip-link" href="#contenu">Aller au contenu principal</a>
+<header class="site-header" data-site-header></header>
+<script src="js/layout.js?v=20260926o"></script>
+<main id="contenu" tabindex="-1">
+  <section class="page-head">
+    <div class="wrap page-head-grid">
+      <p class="page-kana" aria-hidden="true">設定</p>
+      <div>
+        <nav class="breadcrumb" aria-label="Fil d'Ariane"><ol><li><a href="index.html">Accueil</a></li><li aria-current="page">Paramètres</li></ol></nav>
+        <h1 class="page-title">Paramètres</h1>
+        <p class="page-lead">Ton profil, la couleur du site, ton statut Premium, ta watchlist et tes favoris.</p>
+      </div>
+    </div>
+  </section>
+  <div class="wrap section" data-settings-guard hidden>
+    <div class="state">
+      <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#user"></use></svg>
+      <strong>Connexion nécessaire</strong>
+      <p>Connecte-toi pour accéder à tes paramètres, ta watchlist et tes favoris.</p>
+      <a class="btn btn-primary btn-sm" href="connexion.html?next=parametres.html">Se connecter</a>
+    </div>
+  </div>
+  <div class="wrap settings" data-settings hidden>
+    <div class="tabs settings-tabs" role="tablist" aria-label="Rubriques des paramètres">
+      <button class="tab" role="tab" type="button" id="tab-profil" data-tab="profil" aria-controls="panel-profil" aria-selected="true"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#user"></use></svg>Profil</button>
+      <button class="tab" role="tab" type="button" id="tab-apparence" data-tab="apparence" aria-controls="panel-apparence" aria-selected="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#palette"></use></svg>Apparence</button>
+      <button class="tab" role="tab" type="button" id="tab-premium" data-tab="premium" aria-controls="panel-premium" aria-selected="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#crown"></use></svg>Premium</button>
+      <button class="tab" role="tab" type="button" id="tab-coins" data-tab="coins" aria-controls="panel-coins" aria-selected="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#coin"></use></svg>Anime Coins</button>
+      <button class="tab" role="tab" type="button" id="tab-watchlist" data-tab="watchlist" aria-controls="panel-watchlist" aria-selected="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#bookmark"></use></svg>Watchlist</button>
+      <button class="tab" role="tab" type="button" id="tab-favoris" data-tab="favoris" aria-controls="panel-favoris" aria-selected="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#heart"></use></svg>Favoris</button>
+      <button class="tab" role="tab" type="button" id="tab-compte" data-tab="compte" aria-controls="panel-compte" aria-selected="false"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#sliders"></use></svg>Compte</button>
+    </div>
+    <div>
+      <section class="settings-panel tab-panel" role="tabpanel" id="panel-profil" aria-labelledby="tab-profil" tabindex="0">
+        <div class="settings-block">
+          <h2>Photo de profil et bannière</h2>
+          <div class="profile-editor">
+            <div class="banner-zone" data-banner-zone>
+              <img data-banner-img alt="" hidden>
+              <div class="zone-busy" data-banner-busy hidden><span><span class="btn-spinner" aria-hidden="true"></span>Envoi de la bannière…</span></div>
+            </div>
+            <div class="profile-editor-row">
+              <div class="avatar-zone" data-avatar-zone>
+                <span data-avatar-slot></span>
+                <div class="zone-busy" data-avatar-busy hidden><span><span class="btn-spinner" aria-hidden="true"></span><span class="sr-only">Envoi de la photo…</span></span></div>
+              </div>
+              <div class="profile-identity">
+                <p class="eyebrow">Aperçu de ton profil</p>
+                <p class="section-title" data-profile-name>—</p>
+                <p data-profile-email>—</p>
+                <div class="badge-row" data-profile-badges></div>
+              </div>
+            </div>
+            <div class="upload-fields">
+              <div class="upload-field">
+                <span class="label" id="banner-field-label">Bannière</span>
+                <div class="upload-controls">
+                  <input class="file-input" type="file" id="banner-input" accept="image/jpeg,image/png,image/webp,image/gif" aria-describedby="banner-rules banner-error">
+                  <label class="btn btn-sm" for="banner-input"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#upload"></use></svg>Choisir une nouvelle bannière</label>
+                </div>
+                <ul class="upload-rules" id="banner-rules">
+                  <li><span><strong>Taille recommandée :</strong> 1500 × 500 px (format 3:1)</span></li>
+                  <li><span><strong>Formats acceptés :</strong> JPG, PNG, WebP ou GIF</span></li>
+                  <li><span><strong>Taille maximale :</strong> 15 Mo (l'image est recadrée puis compressée avant l'envoi)</span></li>
+                  <li><span><strong>Dimensions :</strong> 900 × 300 px minimum ; tu choisis le cadrage avant la publication</span></li>
+                  <li><span>Sur mobile, les côtés sont rognés : garde l'essentiel au centre.</span></li>
+                </ul>
+                <p class="field-error" id="banner-error" role="alert"></p>
+              </div>
+              <div class="upload-field">
+                <span class="label" id="avatar-field-label">Photo de profil</span>
+                <div class="upload-controls">
+                  <input class="file-input" type="file" id="avatar-input" accept="image/jpeg,image/png,image/webp,image/gif" aria-describedby="avatar-rules avatar-error">
+                  <label class="btn btn-sm" for="avatar-input"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#upload"></use></svg>Choisir une nouvelle photo</label>
+                </div>
+                <ul class="upload-rules" id="avatar-rules">
+                  <li><span><strong>Formats acceptés :</strong> JPG, PNG, WebP ou GIF</span></li>
+                  <li><span><strong>Taille maximale :</strong> 15 Mo (2 Mo pour un GIF animé gardé tel quel)</span></li>
+                  <li><span><strong>Dimensions :</strong> 128 × 128 px minimum ; tu zoomes et places la photo dans le cercle avant la publication</span></li>
+                </ul>
+                <p class="field-error" id="avatar-error" role="alert"></p>
+              </div>
+            </div>
+          </div>
+          <p class="field-hint">Tu peux aussi glisser-déposer une image directement sur l'aperçu de la bannière ou de la photo.</p>
+        </div>
+        <div class="settings-block">
+          <h2>Profil public</h2>
+          <div class="panel-card stack-sm">
+            <label class="switch" for="setting-public">
+              <input type="checkbox" id="setting-public" role="switch" aria-describedby="public-state public-scope">
+              Rendre mon profil visible publiquement
+            </label>
+            <p class="field-hint" id="public-state" data-public-state aria-live="polite"></p>
+            <p class="field-hint" id="public-scope">Sont visibles : ton pseudo, ta photo, ta bannière, ton rôle, ton badge Premium et ton mois d'inscription. Ton e-mail, ta watchlist et tes favoris ne sont jamais affichés.</p>
+            <a class="link-arrow" href="profil.html" data-public-link><span>Voir mon profil public</span><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></a>
+          </div>
+        </div>
+      </section>
+      <section class="settings-panel tab-panel" role="tabpanel" id="panel-apparence" aria-labelledby="tab-apparence" tabindex="0" hidden>
+        <div class="settings-block">
+          <h2>Couleur du site</h2>
+          <p>La couleur choisie s'applique à tout le site sur tous tes appareils connectés à ce compte. Le texte reste lisible quelle que soit la couleur.</p>
+          <fieldset class="theme-grid">
+            <legend class="sr-only">Couleur principale du site</legend>
+            <div class="theme-options">
+              <label class="theme-option"><input type="radio" name="theme" value="original"><span class="theme-card"><span class="theme-swatch sw-original"></span><span class="theme-name">Original<svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#check"></use></svg></span></span></label>
+              <label class="theme-option"><input type="radio" name="theme" value="sakura"><span class="theme-card"><span class="theme-swatch sw-sakura"></span><span class="theme-name">Sakura<svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#check"></use></svg></span></span></label>
+              <label class="theme-option"><input type="radio" name="theme" value="amethyste"><span class="theme-card"><span class="theme-swatch sw-amethyste"></span><span class="theme-name">Améthyste<svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#check"></use></svg></span></span></label>
+              <label class="theme-option"><input type="radio" name="theme" value="ocean"><span class="theme-card"><span class="theme-swatch sw-ocean"></span><span class="theme-name">Océan<svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#check"></use></svg></span></span></label>
+              <label class="theme-option"><input type="radio" name="theme" value="emeraude"><span class="theme-card"><span class="theme-swatch sw-emeraude"></span><span class="theme-name">Émeraude<svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#check"></use></svg></span></span></label>
+              <label class="theme-option"><input type="radio" name="theme" value="flamme"><span class="theme-card"><span class="theme-swatch sw-flamme"></span><span class="theme-name">Flamme<svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#check"></use></svg></span></span></label>
+            </div>
+          </fieldset>
+        </div>
+      </section>
+      <section class="settings-panel tab-panel" role="tabpanel" id="panel-premium" aria-labelledby="tab-premium" tabindex="0" hidden>
+        <div class="settings-block">
+          <h2>Statut Premium</h2>
+          <div class="panel-card premium-state" data-premium-state></div>
+        </div>
+        <div class="settings-block">
+          <h2>Activer une clé Premium</h2>
+          <p>Une clé débloque un niveau Premium (ou des Anime Coins) sur ton compte. Chaque clé ne fonctionne qu'une seule fois : une fois activée, elle devient inutilisable.</p>
+          <form class="panel-card form-stack" id="key-form" novalidate>
+            <div class="field">
+              <label class="label" for="premium-key">Clé Premium</label>
+              <input class="input key-input" id="premium-key" name="key" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" maxlength="23" placeholder="LUM-XXXX-XXXX-XXXX-XXXX" aria-describedby="premium-key-hint premium-key-error">
+              <p class="field-hint" id="premium-key-hint">« LUM » (ou « MYA » pour les anciennes clés) suivi de 16 lettres et chiffres. Les tirets s'ajoutent tout seuls. Les clés n'utilisent jamais O, 0, I ni 1.</p>
+              <p class="field-error" id="premium-key-error"></p>
+            </div>
+            <div class="form-alert form-alert--success" role="status" data-key-result></div>
+            <div><button class="btn btn-primary" type="submit"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#key"></use></svg>Activer ma clé</button></div>
+          </form>
+        </div>
+        <div class="settings-block" data-my-keys-block hidden>
+          <h2>Mes clés achetées</h2>
+          <p>Les clés que tu as achetées. Tu peux en activer une ci-dessus ou la copier pour l'offrir.</p>
+          <ul class="key-list" data-my-keys></ul>
+        </div>
+        <div class="settings-block">
+          <h2>Tutoriel : obtenir et utiliser une clé</h2>
+          <ol class="steps">
+            <li><div><strong>Obtiens une clé</strong>Achète-la sur la page Premium (paiement sécurisé par SumUp), reçois-la en cadeau, ou gagne-la lors d'un événement.</div></li>
+            <li><div><strong>Retrouve-la</strong>Après un achat, la clé s'affiche à l'écran et reste disponible dans la rubrique « Mes clés achetées » de cet onglet.</div></li>
+            <li><div><strong>Colle-la ci-dessus</strong>Copie la clé complète (LUM-XXXX-XXXX-XXXX-XXXX), colle-la dans le champ puis clique sur « Activer ma clé ».</div></li>
+            <li><div><strong>Profite du Premium</strong>Le niveau s'active immédiatement. Une clé Soutien activée pendant un Soutien en cours ajoute 30 jours à la date d'expiration.</div></li>
+          </ol>
+        </div>
+      </section>
+      <section class="settings-panel tab-panel" role="tabpanel" id="panel-watchlist" aria-labelledby="tab-watchlist" tabindex="0" hidden>
+        <div class="settings-block">
+          <h2>Ma watchlist</h2>
+          <ul class="card-grid" data-saved-list="watchlist" aria-label="Animes de ma watchlist"></ul>
+        </div>
+      </section>
+      <section class="settings-panel tab-panel" role="tabpanel" id="panel-favoris" aria-labelledby="tab-favoris" tabindex="0" hidden>
+        <div class="settings-block">
+          <h2>Mes favoris</h2>
+          <ul class="card-grid" data-saved-list="favorites" aria-label="Mes animes favoris"></ul>
+        </div>
+      </section>
+      <section class="settings-panel tab-panel" role="tabpanel" id="panel-coins" aria-labelledby="tab-coins" tabindex="0" hidden>
+        <div class="settings-block">
+          <h2>Mes Anime Coins</h2>
+          <dl class="account-facts" data-coins-facts></dl>
+        </div>
+        <div class="settings-block">
+          <h2>Récompense du jour</h2>
+          <div class="stack-sm" data-settings-daily></div>
+        </div>
+        <div class="settings-block">
+          <h2>Aller plus loin</h2>
+          <p>Succès, boutique Premium et historique complet sont sur la page Anime Coins.</p>
+          <div class="action-row">
+            <a class="btn btn-sm" href="coins.html"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#trophy"></use></svg><span>Voir mes succès</span></a>
+            <a class="btn btn-sm btn-ghost" href="coins.html#boutique"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#crown"></use></svg><span>Échanger contre du Premium</span></a>
+          </div>
+        </div>
+      </section>
+      <section class="settings-panel tab-panel" role="tabpanel" id="panel-compte" aria-labelledby="tab-compte" tabindex="0" hidden>
+        <div class="settings-block">
+          <h2>Informations du compte</h2>
+          <dl class="account-facts" data-account-facts></dl>
+        </div>
+        <div class="settings-block">
+          <h2>Changer de pseudo</h2>
+          <form class="stack-sm" data-pseudo-form novalidate>
+            <div class="field">
+              <label class="label" for="new-pseudo">Nouveau pseudo</label>
+              <input class="input" id="new-pseudo" name="pseudo" type="text" minlength="3" maxlength="20" autocomplete="nickname" aria-describedby="new-pseudo-hint new-pseudo-error">
+              <p class="field-hint" id="new-pseudo-hint">3 à 20 caractères : lettres, chiffres, espaces et _ . -. Il doit être libre. Tu peux en changer une fois tous les 7 jours.</p>
+              <p class="field-error" id="new-pseudo-error"></p>
+            </div>
+            <p class="field-hint" data-pseudo-cooldown hidden></p>
+            <div><button class="btn btn-primary" type="submit"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#check"></use></svg><span>Changer de pseudo</span></button></div>
+          </form>
+        </div>
+        <div class="settings-block">
+          <h2>Changer d'adresse e-mail</h2>
+          <form class="stack-sm" data-email-form novalidate>
+            <div class="field">
+              <label class="label" for="new-email">Nouvelle adresse e-mail</label>
+              <input class="input" id="new-email" name="email" type="email" maxlength="254" autocomplete="email" aria-describedby="new-email-hint new-email-error">
+              <p class="field-hint" id="new-email-hint">Un lien de confirmation est envoyé à la nouvelle adresse (et, selon la configuration, à l'actuelle). Ton adresse ne change qu'après le clic sur ce lien.</p>
+              <p class="field-error" id="new-email-error"></p>
+            </div>
+            <p class="notice-inline" data-email-pending hidden></p>
+            <div><button class="btn btn-primary" type="submit"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#check"></use></svg><span>Envoyer le lien de confirmation</span></button></div>
+          </form>
+        </div>
+        <div class="settings-block">
+          <h2>Mot de passe</h2>
+          <p>Pour changer ton mot de passe, reçois un lien sécurisé sur l'adresse de ton compte, puis choisis le nouveau mot de passe depuis ce lien.</p>
+          <p class="form-alert" role="status" data-password-status></p>
+          <div><button class="btn" type="button" data-password-reset><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#lock"></use></svg><span>Recevoir le lien par e-mail</span></button></div>
+        </div>
+        <div class="settings-block">
+          <h2>Session</h2>
+          <p>La déconnexion efface ta session sur cet appareil. Tes listes restent enregistrées sur ton compte.</p>
+          <div><button class="btn" type="button" data-settings-logout><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#logout"></use></svg>Se déconnecter de cet appareil</button></div>
+        </div>
+        <div class="settings-block">
+          <h2>Supprimer mon compte</h2>
+          <p>Pour supprimer ton compte et tes données, écris à <a class="link" href="mailto:myanimesfr@proton.me">myanimesfr@proton.me</a> depuis l'adresse de ton compte.</p>
+        </div>
+      </section>
+    </div>
+  </div>
+</main>
+<footer class="site-footer" data-site-footer></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
+<script src="js/supabase-config.js?v=20260926o"></script>
+<script src="js/supabase-client.js?v=20260926o"></script>
+<script src="js/premium.js?v=20260926o"></script>
+<script src="js/ui.js?v=20260926o"></script>
+<script src="js/data.js?v=20260926o"></script>
+<script src="js/preload.js?v=20260926o"></script>
+<script src="js/watchlist.js?v=20260926o"></script>
+<script src="js/pages/parametres.js?v=20260926o"></script>
+</body>
+</html>

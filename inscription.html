@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="fr" data-preload>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Créer un compte — LumaAnime</title>
+<meta name="description" content="Crée ton compte LumaAnime gratuit pour garder ta watchlist et tes favoris.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0D0D13">
+<link rel="icon" href="assets/logos/favicon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
+<link rel="preconnect" href="https://graphql.anilist.co" crossorigin>
+<link rel="preconnect" href="https://s4.anilist.co">
+<link rel="preload" href="assets/fonts/unbounded-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css?v=20260926o">
+<link rel="stylesheet" href="css/pages.css?v=20260926o">
+<script src="js/theme-boot.js?v=20260926o"></script>
+</head>
+<body data-page="inscription">
+<a class="skip-link" href="#contenu">Aller au contenu principal</a>
+<header class="site-header" data-site-header></header>
+<script src="js/layout.js?v=20260926o"></script>
+<main id="contenu" tabindex="-1">
+  <div class="auth">
+    <aside class="auth-art" aria-labelledby="auth-art-title">
+      <div class="auth-wall" data-auth-wall aria-hidden="true"></div>
+      <div class="auth-art-content">
+        <p class="auth-art-kana" aria-hidden="true">登録</p>
+        <h2 class="auth-art-title" id="auth-art-title">Un compte gratuit pour suivre tes animes.</h2>
+        <ul class="auth-art-list">
+          <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#bookmark"></use></svg>Watchlist et favoris enregistrés</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#palette"></use></svg>Couleur du site au choix</li>
+          <li><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#user"></use></svg>Profil public facultatif</li>
+        </ul>
+      </div>
+    </aside>
+    <div class="auth-panel">
+      <div class="auth-card">
+        <h1>Créer un compte</h1>
+        <p class="auth-sub">Gratuit, sans engagement. Seules les informations de l'étape 1 sont obligatoires.</p>
+        <div class="state" data-already hidden>
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#user"></use></svg>
+          <strong>Tu as déjà un compte</strong>
+          <p>Tu es connecté en tant que <span data-already-name></span>.</p>
+          <a class="btn btn-primary btn-sm" href="parametres.html">Ouvrir mes paramètres</a>
+        </div>
+        <ol class="stepper" data-stepper aria-label="Étapes de l'inscription">
+          <li aria-current="step">1. Compte</li>
+          <li>2. Photo</li>
+          <li>3. Bannière</li>
+        </ol>
+        <form id="register-form" class="form-stack" novalidate>
+          <div class="form-alert" role="alert" data-form-alert></div>
+          <div class="form-stack" data-step="1">
+            <div class="step-head">
+              <h2 tabindex="-1">Étape 1 sur 3 : ton compte</h2>
+            </div>
+            <div class="field">
+              <div class="label-row">
+                <label class="label" for="reg-pseudo">Pseudo</label>
+                <span class="counter" data-counter-for="reg-pseudo" aria-hidden="true"></span>
+              </div>
+              <input class="input" id="reg-pseudo" name="pseudo" type="text" autocomplete="nickname" minlength="3" maxlength="20" data-counter required aria-describedby="reg-pseudo-hint reg-pseudo-error">
+              <p class="field-hint" id="reg-pseudo-hint">3 à 20 caractères : lettres, chiffres, espaces, _ . et -. Il sera visible sur ton profil public.</p>
+              <p class="field-error" id="reg-pseudo-error"></p>
+            </div>
+            <div class="field">
+              <label class="label" for="reg-email">Adresse e-mail</label>
+              <input class="input" id="reg-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" required aria-describedby="reg-email-hint reg-email-error">
+              <p class="field-hint" id="reg-email-hint">Sert à te connecter et à réinitialiser ton mot de passe. Elle n'est jamais affichée publiquement.</p>
+              <p class="field-error" id="reg-email-error"></p>
+            </div>
+            <div class="field">
+              <label class="label" for="reg-password">Mot de passe</label>
+              <div class="input-group">
+                <input class="input" id="reg-password" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="72" required aria-describedby="reg-password-hint reg-password-error">
+                <button class="icon-btn" type="button" data-password-toggle="reg-password"></button>
+              </div>
+              <ul class="pw-rules" id="reg-password-hint">
+                <li data-pw-rule><span data-pw-icon><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#x"></use></svg></span>8 caractères minimum (72 maximum)</li>
+              </ul>
+              <p class="field-error" id="reg-password-error"></p>
+            </div>
+            <div class="field">
+              <label class="check">
+                <input type="checkbox" id="reg-terms" name="terms" required aria-describedby="reg-terms-error">
+                <span>J'accepte les <a href="conditions.html" target="_blank" rel="noopener">conditions d'utilisation<span class="sr-only"> (s'ouvre dans un nouvel onglet)</span></a>.</span>
+              </label>
+              <p class="field-hint">Tes données sont traitées comme décrit dans la <a class="link" href="confidentialite.html" target="_blank" rel="noopener">politique de confidentialité<span class="sr-only"> (s'ouvre dans un nouvel onglet)</span></a>.</p>
+              <p class="field-error" id="reg-terms-error"></p>
+            </div>
+            <div class="step-actions">
+              <button class="btn btn-primary btn-lg" type="button" data-go="2">Continuer vers la photo de profil<svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></button>
+            </div>
+          </div>
+          <div class="form-stack" data-step="2" hidden>
+            <div class="step-head">
+              <h2 tabindex="-1">Étape 2 sur 3 : photo de profil</h2>
+              <p>Facultatif. Tu pourras l'ajouter ou la changer plus tard dans tes paramètres.</p>
+            </div>
+            <div class="field">
+              <div class="dropzone dropzone--avatar" data-drop="avatar">
+                <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" aria-labelledby="avatar-drop-title" aria-describedby="avatar-rules avatar-upload-error">
+                <div class="dropzone-text">
+                  <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#image"></use></svg>
+                  <span class="dropzone-title" id="avatar-drop-title">Choisir une photo de profil</span>
+                  <span class="dropzone-sub">ou glisse-la ici</span>
+                </div>
+              </div>
+              <ul class="upload-rules" id="avatar-rules">
+                <li><span><strong>Formats acceptés :</strong> JPG, PNG, WebP ou GIF</span></li>
+                <li><span><strong>Taille maximale :</strong> 15 Mo (2 Mo pour un GIF animé gardé tel quel)</span></li>
+                <li><span><strong>Dimensions :</strong> 128 × 128 px minimum ; tu zoomes et places la photo dans le cercle avant la publication</span></li>
+              </ul>
+              <p class="field-error" id="avatar-upload-error" role="alert"></p>
+              <button class="btn btn-ghost btn-sm" type="button" data-clear="avatar" hidden>Retirer cette photo</button>
+            </div>
+            <div class="step-actions">
+              <button class="btn" type="button" data-go="1"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-left"></use></svg>Retour au compte</button>
+              <button class="btn btn-primary" type="button" data-go="3">Continuer vers la bannière<svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-right"></use></svg></button>
+            </div>
+          </div>
+          <div class="form-stack" data-step="3" hidden>
+            <div class="step-head">
+              <h2 tabindex="-1">Étape 3 sur 3 : bannière</h2>
+              <p>Facultatif. Elle s'affiche en haut de ton profil public.</p>
+            </div>
+            <div class="field">
+              <div class="dropzone dropzone--banner" data-drop="banner">
+                <input type="file" accept="image/jpeg,image/png,image/webp,image/gif" aria-labelledby="banner-drop-title" aria-describedby="banner-rules banner-upload-error">
+                <div class="dropzone-text">
+                  <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#image"></use></svg>
+                  <span class="dropzone-title" id="banner-drop-title">Choisir une bannière</span>
+                  <span class="dropzone-sub">ou glisse-la ici</span>
+                </div>
+              </div>
+              <ul class="upload-rules" id="banner-rules">
+                <li><span><strong>Taille recommandée :</strong> 1500 × 500 px (format 3:1)</span></li>
+                <li><span><strong>Formats acceptés :</strong> JPG, PNG, WebP ou GIF</span></li>
+                <li><span><strong>Taille maximale :</strong> 15 Mo (l'image est recadrée puis compressée avant l'envoi)</span></li>
+                <li><span><strong>Dimensions :</strong> 900 × 300 px minimum ; tu choisis le cadrage avant la publication</span></li>
+                <li><span>Sur mobile, les côtés sont rognés : garde l'essentiel au centre.</span></li>
+              </ul>
+              <p class="field-error" id="banner-upload-error" role="alert"></p>
+              <button class="btn btn-ghost btn-sm" type="button" data-clear="banner" hidden>Retirer cette bannière</button>
+            </div>
+            <div class="step-actions">
+              <button class="btn" type="button" data-go="2"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-left"></use></svg>Retour à la photo</button>
+              <button class="btn btn-primary btn-lg" type="submit">Créer mon compte</button>
+            </div>
+          </div>
+        </form>
+        <div class="state" data-register-done hidden>
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#check"></use></svg>
+          <h2 class="section-title" tabindex="-1">Compte créé</h2>
+          <p data-done-text></p>
+          <a class="btn btn-primary btn-sm" href="connexion.html" data-done-login hidden>Aller à la connexion</a>
+          <a class="btn btn-primary btn-sm" href="parametres.html#profil" data-done-settings hidden>Ouvrir mes paramètres</a>
+        </div>
+        <p class="auth-switch">Déjà un compte ? <a class="link" href="connexion.html">Se connecter</a></p>
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="site-footer" data-site-footer></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
+<script src="js/supabase-config.js?v=20260926o"></script>
+<script src="js/supabase-client.js?v=20260926o"></script>
+<script src="js/premium.js?v=20260926o"></script>
+<script src="js/ui.js?v=20260926o"></script>
+<script src="js/data.js?v=20260926o"></script>
+<script src="js/preload.js?v=20260926o"></script>
+<script src="js/pages/inscription.js?v=20260926o"></script>
+</body>
+</html>

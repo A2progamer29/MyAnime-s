@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr" data-preload>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Catalogue — LumaAnime</title>
+<meta name="description" content="Recherche un titre, filtre par genre et trie les résultats du catalogue.">
+<meta name="theme-color" content="#0D0D13">
+<link rel="icon" href="assets/logos/favicon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
+<link rel="preconnect" href="https://graphql.anilist.co" crossorigin>
+<link rel="preconnect" href="https://s4.anilist.co">
+<link rel="preload" href="assets/fonts/unbounded-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css?v=20260926o">
+<link rel="stylesheet" href="css/pages.css?v=20260926o">
+<script src="js/theme-boot.js?v=20260926o"></script>
+</head>
+<body data-page="catalogue">
+<a class="skip-link" href="#contenu">Aller au contenu principal</a>
+<header class="site-header" data-site-header></header>
+<script src="js/layout.js?v=20260926o"></script>
+<main id="contenu" tabindex="-1">
+  <section class="page-head">
+    <div class="wrap page-head-grid">
+      <p class="page-kana" aria-hidden="true">カタログ</p>
+      <div>
+        <nav class="breadcrumb" aria-label="Fil d'Ariane"><ol><li><a href="index.html">Accueil</a></li><li aria-current="page">Catalogue</li></ol></nav>
+        <h1 class="page-title">Catalogue</h1>
+        <p class="page-lead" data-catalog-lead>Recherche, filtre et trie les titres du catalogue.</p>
+      </div>
+    </div>
+  </section>
+  <form class="wrap catalog" data-catalog-form role="search" aria-label="Rechercher et filtrer le catalogue" novalidate>
+    <div>
+      <details class="filters-drawer" data-filters-drawer>
+        <summary class="filters-summary">
+          <span class="filters-summary-label"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#filter"></use></svg>Filtres <span data-filter-count></span></span>
+          <svg class="icon icon-chevron" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#chevron-down"></use></svg>
+        </summary>
+        <div class="filters-body">
+          <fieldset data-type-filter hidden>
+            <legend class="label">Type</legend>
+            <div class="chip-checks" data-type-options></div>
+          </fieldset>
+          <fieldset>
+            <legend class="label">Genres</legend>
+            <div class="chip-checks" data-genre-options></div>
+          </fieldset>
+          <p class="field-hint" data-genre-hint></p>
+          <button class="btn btn-ghost btn-sm" type="button" data-filters-reset>Effacer tous les filtres</button>
+        </div>
+      </details>
+    </div>
+    <div>
+      <div class="catalog-toolbar">
+        <div class="field">
+          <div class="label-row">
+            <label class="label" for="catalog-q">Rechercher un titre</label>
+            <span class="counter" data-counter-for="catalog-q" aria-hidden="true"></span>
+          </div>
+          <div class="input-group">
+            <input class="input" id="catalog-q" name="q" type="search" maxlength="100" data-counter autocomplete="off" aria-describedby="catalog-q-hint catalog-q-error">
+            <button class="icon-btn" type="submit"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#search"></use></svg><span class="sr-only">Lancer la recherche</span></button>
+          </div>
+          <p class="field-hint" id="catalog-q-hint"></p>
+          <p class="field-error" id="catalog-q-error"></p>
+        </div>
+        <div class="field">
+          <label class="label" for="catalog-sort">Trier par</label>
+          <select class="select" id="catalog-sort" name="sort"></select>
+        </div>
+      </div>
+      <p class="catalog-status" data-catalog-status role="status"></p>
+      <p class="catalog-note" data-list-note>Affiches, résumés et notes : TMDB, transmis par le catalogue partenaire.</p>
+      <ul class="card-grid" data-catalog-grid aria-label="Résultats du catalogue"></ul>
+      <div class="load-more"><button class="btn" type="button" data-catalog-more hidden>Afficher plus de résultats</button></div>
+    </div>
+  </form>
+</main>
+<footer class="site-footer" data-site-footer></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
+<script src="js/supabase-config.js?v=20260926o"></script>
+<script src="js/supabase-client.js?v=20260926o"></script>
+<script src="js/premium.js?v=20260926o"></script>
+<script src="js/ui.js?v=20260926o"></script>
+<script src="js/data.js?v=20260926o"></script>
+<script src="js/preload.js?v=20260926o"></script>
+<script src="js/watchlist.js?v=20260926o"></script>
+<script src="js/api.js?v=20260926o"></script>
+<script src="js/catalogue.js?v=20260926o"></script>
+</body>
+</html>

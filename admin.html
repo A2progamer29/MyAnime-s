@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Administration — LumaAnime</title>
+<meta name="description" content="Administration de LumaAnime.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0D0D13">
+<link rel="icon" href="assets/logos/favicon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
+<link rel="stylesheet" href="css/admin.css?v=20260926o">
+</head>
+<body class="adm">
+<a class="adm-skip" href="#adm-main">Aller au contenu</a>
+<div class="adm-shell">
+  <aside class="adm-side" aria-label="Navigation de l'administration">
+    <div class="adm-brand"><span class="adm-logo" aria-hidden="true">L</span><div><strong>LumaAnime</strong><span>Administration</span></div></div>
+    <nav>
+      <a href="#tableau" data-nav="tableau">Tableau de bord</a>
+      <a href="#stats" data-nav="stats">Statistiques</a>
+      <a href="#membres" data-nav="membres">Membres</a>
+      <a href="#cles" data-nav="cles">Clés</a>
+      <a href="#commandes" data-nav="commandes">Commandes</a>
+      <a href="#journal" data-nav="journal">Journal</a>
+    </nav>
+    <div class="adm-side-foot">
+      <p class="adm-me" data-me></p>
+      <a class="adm-link" href="index.html">Retour au site</a>
+    </div>
+  </aside>
+  <main class="adm-main" id="adm-main" tabindex="-1">
+    <div class="adm-guard" data-guard role="status">Vérification de tes droits d'accès…</div>
+    <section class="adm-view" data-view="tableau" hidden aria-labelledby="t-tableau">
+      <header class="adm-head"><h1 id="t-tableau">Tableau de bord</h1><button class="adm-btn" type="button" data-refresh>Actualiser</button></header>
+      <div class="adm-kpis" data-kpis></div>
+      <section class="adm-card adm-pay" aria-labelledby="pay-title">
+        <div class="adm-head"><h2 id="pay-title">Paiements SumUp</h2><button class="adm-btn adm-btn--sm" type="button" data-pay-check>Vérifier</button></div>
+        <ul class="adm-checks" data-payments></ul>
+      </section>
+    </section>
+    <section class="adm-view" data-view="stats" hidden aria-labelledby="t-stats">
+      <header class="adm-head"><h1 id="t-stats">Statistiques du site</h1><button class="adm-btn" type="button" data-stats-refresh>Actualiser</button></header>
+      <div class="adm-kpis" data-site-kpis></div>
+      <div class="adm-stats-grid">
+        <section class="adm-card" aria-labelledby="live-title">
+          <h2 id="live-title">Actifs en ce moment <span class="adm-live" aria-hidden="true"></span></h2>
+          <p class="adm-muted">Visiteurs ayant une page ouverte depuis moins de 2 minutes, mis à jour toutes les 30 secondes.</p>
+          <ul class="adm-bars" data-live-pages></ul>
+        </section>
+        <section class="adm-card" aria-labelledby="days-title">
+          <h2 id="days-title">Pages vues sur 14 jours</h2>
+          <ol class="adm-days" data-days></ol>
+        </section>
+      </div>
+      <div class="adm-head adm-head--sub"><h2>Vues par titre</h2><input class="adm-input" type="search" placeholder="Rechercher un titre" aria-label="Rechercher un titre" data-titles-search></div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <caption class="adm-sr">Nombre de vues de chaque titre (une vue par visiteur et par jour)</caption>
+          <thead><tr><th scope="col">#</th><th scope="col">Titre</th><th scope="col" class="adm-num">Aujourd'hui</th><th scope="col" class="adm-num">7 jours</th><th scope="col" class="adm-num">Total</th></tr></thead>
+          <tbody data-titles></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="adm-view" data-view="membres" hidden aria-labelledby="t-membres">
+      <header class="adm-head"><h1 id="t-membres">Membres</h1><span class="adm-muted" data-users-count role="status"></span></header>
+      <div class="adm-toolbar">
+        <label class="adm-field adm-grow"><span>Rechercher</span><input class="adm-input" type="search" data-users-search placeholder="Pseudo ou e-mail" autocomplete="off" maxlength="100"></label>
+        <label class="adm-field"><span>Filtre</span>
+          <select class="adm-input" data-users-filter>
+            <option value="all">Tous les membres</option>
+            <option value="premium">Premium actifs</option>
+            <option value="free">Sans Premium</option>
+            <option value="admin">Administrateurs</option>
+          </select>
+        </label>
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <caption class="adm-sr">Membres inscrits. Choisis un membre pour gérer son compte.</caption>
+          <thead><tr><th scope="col">Membre</th><th scope="col">Rôle</th><th scope="col">Premium</th><th scope="col" class="adm-num">Anime Coins</th><th scope="col" class="adm-num">Série</th><th scope="col">Inscription</th><th scope="col">Dernière connexion</th><th scope="col"><span class="adm-sr">Action</span></th></tr></thead>
+          <tbody data-users></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="adm-view" data-view="cles" hidden aria-labelledby="t-cles">
+      <header class="adm-head"><h1 id="t-cles">Clés</h1></header>
+      <form class="adm-card adm-form" data-keygen novalidate>
+        <h2>Générer des clés</h2>
+        <div class="adm-row">
+          <label class="adm-field"><span>Type</span>
+            <select class="adm-input" name="kind"><option value="premium">Premium</option><option value="coins">Anime Coins</option></select>
+          </label>
+          <label class="adm-field" data-kind="premium"><span>Niveau</span>
+            <select class="adm-input" name="tier"><option value="soutien">Soutien (30 jours)</option><option value="soutien_plus">Soutien + (à vie)</option></select>
+          </label>
+          <label class="adm-field" data-kind="coins" hidden><span>Anime Coins par clé (10 à 5 000)</span><input class="adm-input" name="coins" type="number" min="10" max="5000" step="10" value="100"></label>
+          <label class="adm-field"><span>Nombre (1 à 50)</span><input class="adm-input" name="count" type="number" min="1" max="50" value="1"></label>
+          <label class="adm-field"><span>Origine</span>
+            <select class="adm-input" name="source"><option value="admin">Cadeau de l'équipe</option><option value="evenement">Événement</option></select>
+          </label>
+        </div>
+        <div class="adm-actions"><button class="adm-btn adm-btn--primary" type="submit">Générer</button></div>
+        <div class="adm-output" data-keygen-output hidden aria-live="polite"></div>
+      </form>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <caption class="adm-sr">200 dernières clés</caption>
+          <thead><tr><th scope="col">Clé</th><th scope="col">Contenu</th><th scope="col">Origine</th><th scope="col">Statut</th><th scope="col">Créée</th><th scope="col"><span class="adm-sr">Actions</span></th></tr></thead>
+          <tbody data-keys></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="adm-view" data-view="commandes" hidden aria-labelledby="t-commandes">
+      <header class="adm-head"><h1 id="t-commandes">Commandes</h1></header>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <caption class="adm-sr">200 dernières commandes SumUp</caption>
+          <thead><tr><th scope="col">Date</th><th scope="col">Membre</th><th scope="col">Offre</th><th scope="col" class="adm-num">Montant</th><th scope="col">Statut</th><th scope="col">Payée le</th></tr></thead>
+          <tbody data-orders></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="adm-view" data-view="journal" hidden aria-labelledby="t-journal">
+      <header class="adm-head"><h1 id="t-journal">Journal des actions</h1></header>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <caption class="adm-sr">200 dernières actions d'administration</caption>
+          <thead><tr><th scope="col">Date</th><th scope="col">Administrateur</th><th scope="col">Action</th><th scope="col">Membre</th><th scope="col">Détails</th></tr></thead>
+          <tbody data-log></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+</div>
+<div class="adm-drawer" data-drawer hidden>
+  <div class="adm-drawer-backdrop" data-drawer-close></div>
+  <section class="adm-drawer-panel" role="dialog" aria-modal="true" aria-labelledby="drawer-title" tabindex="-1">
+    <header class="adm-drawer-head">
+      <div><h2 id="drawer-title" data-d-name></h2><p class="adm-muted" data-d-email></p></div>
+      <button class="adm-icon-btn" type="button" data-drawer-close aria-label="Fermer">✕</button>
+    </header>
+    <dl class="adm-facts" data-d-facts></dl>
+    <form class="adm-block" data-premium-form novalidate>
+      <h3>Premium</h3>
+      <p class="adm-muted" data-d-premium></p>
+      <div class="adm-row">
+        <label class="adm-field"><span>Niveau</span>
+          <select class="adm-input" name="tier"><option value="soutien">Soutien</option><option value="soutien_plus">Soutien + (à vie)</option></select>
+        </label>
+        <label class="adm-field" data-days-field><span>Durée (jours)</span><input class="adm-input" name="days" type="number" min="1" max="3650" value="30"></label>
+      </div>
+      <label class="adm-check" data-extend-field><input type="checkbox" name="extend" checked> Ajouter à la durée restante</label>
+      <div class="adm-actions">
+        <button class="adm-btn adm-btn--primary" type="submit">Donner le Premium</button>
+        <button class="adm-btn adm-btn--danger-ghost" type="button" data-premium-remove>Retirer le Premium</button>
+      </div>
+    </form>
+    <form class="adm-block" data-coins-form novalidate>
+      <h3>Anime Coins</h3>
+      <p class="adm-muted" data-d-coins></p>
+      <div class="adm-row">
+        <label class="adm-field"><span>Montant</span><input class="adm-input" name="amount" type="number" min="1" max="1000000" value="100"></label>
+        <label class="adm-field adm-grow"><span>Note (facultative)</span><input class="adm-input" name="note" type="text" maxlength="200" placeholder="Ex. : compensation, concours…"></label>
+      </div>
+      <div class="adm-actions">
+        <button class="adm-btn adm-btn--primary" type="submit" value="add">Ajouter</button>
+        <button class="adm-btn" type="submit" value="remove">Retirer</button>
+      </div>
+    </form>
+    <div class="adm-block">
+      <h3>Compte</h3>
+      <div class="adm-row">
+        <label class="adm-field"><span>Rôle</span>
+          <select class="adm-input" data-role><option value="membre">Membre</option><option value="admin">Administrateur</option></select>
+        </label>
+      </div>
+      <div class="adm-actions">
+        <button class="adm-btn" type="button" data-role-save>Enregistrer le rôle</button>
+        <button class="adm-btn" type="button" data-streak-reset>Réinitialiser la série</button>
+      </div>
+      <p class="adm-muted" data-self-note hidden>Tu ne peux pas modifier ton propre rôle ni supprimer ton propre compte.</p>
+    </div>
+    <div class="adm-block adm-block--danger">
+      <h3>Zone sensible</h3>
+      <p class="adm-muted">Supprime le compte de connexion, le profil, les listes, les coins et l'historique. Irréversible.</p>
+      <div class="adm-actions"><button class="adm-btn adm-btn--danger" type="button" data-delete>Supprimer le compte</button></div>
+    </div>
+  </section>
+</div>
+<dialog class="adm-dialog" data-confirm aria-labelledby="confirm-title">
+  <form method="dialog">
+    <h2 id="confirm-title" data-confirm-title></h2>
+    <p data-confirm-text></p>
+    <div class="adm-actions">
+      <button class="adm-btn" type="submit" value="cancel">Annuler</button>
+      <button class="adm-btn adm-btn--primary" type="submit" value="ok" data-confirm-ok>Confirmer</button>
+    </div>
+  </form>
+</dialog>
+<div class="adm-toasts" data-toasts aria-live="polite"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
+<script src="js/supabase-config.js?v=20260926o"></script>
+<script src="js/supabase-client.js?v=20260926o"></script>
+<script src="js/premium.js?v=20260926o"></script>
+<script src="js/pages/admin.js?v=20260926o"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr" data-preload>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mon Premium — LumaAnime</title>
+<meta name="description" content="Ton espace Premium : niveau, dates, avantages et clés.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0D0D13">
+<link rel="icon" href="assets/logos/favicon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
+<link rel="preconnect" href="https://graphql.anilist.co" crossorigin>
+<link rel="preconnect" href="https://s4.anilist.co">
+<link rel="preload" href="assets/fonts/unbounded-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css?v=20260926o">
+<link rel="stylesheet" href="css/pages.css?v=20260926o">
+<script src="js/theme-boot.js?v=20260926o"></script>
+</head>
+<body data-page="mon-premium">
+<a class="skip-link" href="#contenu">Aller au contenu principal</a>
+<header class="site-header" data-site-header></header>
+<script src="js/layout.js?v=20260926o"></script>
+<main id="contenu" tabindex="-1">
+  <section class="premium-hero">
+    <div class="wrap">
+      <nav class="breadcrumb" aria-label="Fil d'Ariane"><ol><li><a href="index.html">Accueil</a></li><li aria-current="page">Mon Premium</li></ol></nav>
+      <span class="badge badge--gold"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#crown"></use></svg><span data-mp-badge>Premium</span></span>
+      <h1 class="premium-title" data-mp-title>Mon Premium</h1>
+      <p class="mp-status" data-mp-status role="status">Chargement de ton statut…</p>
+      <div class="mp-remaining" data-mp-remaining hidden>
+        <p><span>Temps restant</span><strong data-mp-remaining-value></strong></p>
+        <div class="meter" aria-hidden="true"><span data-mp-meter></span></div>
+      </div>
+    </div>
+  </section>
+  <div class="wrap section" data-mp-guard hidden></div>
+  <div class="wrap" data-mp-content hidden>
+    <h2 class="sr-only">Détails de ton Premium</h2>
+    <ul class="split split--facts" data-mp-facts></ul>
+    <div class="mp-grid section">
+      <section aria-labelledby="perks-title">
+        <div class="section-head">
+          <p class="eyebrow">Ton niveau</p>
+          <h2 class="section-title" id="perks-title">Tes avantages</h2>
+        </div>
+        <ul class="perk-list" data-mp-perks></ul>
+      </section>
+      <section aria-labelledby="info-title">
+        <div class="section-head">
+          <p class="eyebrow">Important</p>
+          <h2 class="section-title" id="info-title">Bon à savoir</h2>
+        </div>
+        <ul class="info-list" data-mp-infos></ul>
+        <div class="action-row section-action-row" data-mp-actions></div>
+      </section>
+    </div>
+    <section class="section" aria-labelledby="gift-title">
+      <div class="section-head">
+        <p class="eyebrow">Faire plaisir</p>
+        <h2 class="section-title" id="gift-title">Offrir le Premium</h2>
+        <p class="section-desc">Achète une clé et transmets-la : c'est la personne qui l'active dans ses paramètres. Une clé achetée pour offrir n'est jamais activée sur ton compte.</p>
+      </div>
+      <ul class="shop" data-mp-gift></ul>
+    </section>
+    <section class="section" id="mes-cles" aria-labelledby="keys-title">
+      <div class="section-head">
+        <p class="eyebrow">Historique</p>
+        <h2 class="section-title" id="keys-title">Mes clés achetées</h2>
+        <p class="section-desc">Chaque clé ne fonctionne qu'une seule fois. Copie une clé non utilisée pour l'offrir ou l'activer plus tard.</p>
+      </div>
+      <div data-mp-pending></div>
+      <ul class="key-list" data-mp-keys></ul>
+    </section>
+  </div>
+</main>
+<footer class="site-footer" data-site-footer></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
+<script src="js/supabase-config.js?v=20260926o"></script>
+<script src="js/supabase-client.js?v=20260926o"></script>
+<script src="js/premium.js?v=20260926o"></script>
+<script src="js/ui.js?v=20260926o"></script>
+<script src="js/data.js?v=20260926o"></script>
+<script src="js/preload.js?v=20260926o"></script>
+<script src="js/pages/mon-premium.js?v=20260926o"></script>
+</body>
+</html>

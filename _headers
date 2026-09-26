@@ -1,0 +1,18 @@
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  X-Frame-Options: DENY
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), usb=()
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://gateway.sumup.com; style-src 'self' 'unsafe-inline' https://gateway.sumup.com; img-src 'self' data: blob: https://s4.anilist.co https://i.ytimg.com https://cdn.myanimelist.net https://image.tmdb.org https://*.supabase.co https://gateway.sumup.com; font-src 'self' https://gateway.sumup.com; connect-src 'self' https://graphql.anilist.co https://*.supabase.co wss://*.supabase.co https://gateway.sumup.com https://api.sumup.com; frame-src https://gateway.sumup.com https:; media-src https://www.w3schools.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https:; object-src 'none'
+
+/assets/*
+  Cache-Control: public, max-age=604800
+
+/assets/fonts/*
+  Access-Control-Allow-Origin: *
+
+/functions/*
+  X-Robots-Tag: noindex
+
+/supabase/*
+  X-Robots-Tag: noindex

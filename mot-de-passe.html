@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr" data-preload>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Mot de passe oublié — LumaAnime</title>
+<meta name="description" content="Réinitialise le mot de passe de ton compte LumaAnime.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0D0D13">
+<link rel="icon" href="assets/logos/favicon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
+<link rel="preconnect" href="https://graphql.anilist.co" crossorigin>
+<link rel="preconnect" href="https://s4.anilist.co">
+<link rel="preload" href="assets/fonts/unbounded-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css?v=20260926o">
+<link rel="stylesheet" href="css/pages.css?v=20260926o">
+<script src="js/theme-boot.js?v=20260926o"></script>
+</head>
+<body data-page="mot-de-passe">
+<a class="skip-link" href="#contenu">Aller au contenu principal</a>
+<header class="site-header" data-site-header></header>
+<script src="js/layout.js?v=20260926o"></script>
+<main id="contenu" tabindex="-1">
+  <div class="auth">
+    <aside class="auth-art" aria-labelledby="auth-art-title">
+      <div class="auth-wall" data-auth-wall aria-hidden="true"></div>
+      <div class="auth-art-content">
+        <p class="auth-art-kana" aria-hidden="true">パスワード</p>
+        <h2 class="auth-art-title" id="auth-art-title">Retrouve l'accès à ton compte.</h2>
+      </div>
+    </aside>
+    <div class="auth-panel">
+      <div class="auth-card">
+        <h1 data-reset-title>Mot de passe oublié</h1>
+        <p class="auth-sub" data-reset-intro>Indique l'adresse e-mail de ton compte : tu recevras un lien pour choisir un nouveau mot de passe.</p>
+        <form id="reset-request-form" class="form-stack" novalidate>
+          <div class="form-alert" role="alert" data-form-alert></div>
+          <div class="field">
+            <label class="label" for="reset-email">Adresse e-mail du compte</label>
+            <input class="input" id="reset-email" name="email" type="email" inputmode="email" autocomplete="email" maxlength="254" required aria-describedby="reset-email-error">
+            <p class="field-error" id="reset-email-error"></p>
+          </div>
+          <button class="btn btn-primary btn-lg btn-block" type="submit">Recevoir le lien de réinitialisation</button>
+        </form>
+        <form id="reset-update-form" class="form-stack" novalidate hidden>
+          <div class="form-alert" role="alert" data-form-alert></div>
+          <div class="field">
+            <label class="label" for="new-password">Nouveau mot de passe</label>
+            <div class="input-group">
+              <input class="input" id="new-password" name="password" type="password" autocomplete="new-password" minlength="8" maxlength="72" required aria-describedby="new-password-hint new-password-error">
+              <button class="icon-btn" type="button" data-password-toggle="new-password"></button>
+            </div>
+            <p class="field-hint" id="new-password-hint">8 caractères minimum, 72 maximum.</p>
+            <p class="field-error" id="new-password-error"></p>
+          </div>
+          <div class="field">
+            <label class="label" for="confirm-password">Confirme le nouveau mot de passe</label>
+            <input class="input" id="confirm-password" name="confirm" type="password" autocomplete="new-password" maxlength="72" required aria-describedby="confirm-password-error">
+            <p class="field-error" id="confirm-password-error"></p>
+          </div>
+          <button class="btn btn-primary btn-lg btn-block" type="submit">Enregistrer le nouveau mot de passe</button>
+        </form>
+        <div class="state" data-reset-done hidden>
+          <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#check"></use></svg>
+          <h2 class="section-title" tabindex="-1">Mot de passe modifié</h2>
+          <p>Ton nouveau mot de passe est enregistré et tu es connecté.</p>
+          <a class="btn btn-primary btn-sm" href="index.html">Aller à l'accueil</a>
+        </div>
+        <p class="auth-switch">Tu t'en souviens ? <a class="link" href="connexion.html">Retour à la connexion</a></p>
+      </div>
+    </div>
+  </div>
+</main>
+<footer class="site-footer" data-site-footer></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
+<script src="js/supabase-config.js?v=20260926o"></script>
+<script src="js/supabase-client.js?v=20260926o"></script>
+<script src="js/premium.js?v=20260926o"></script>
+<script src="js/ui.js?v=20260926o"></script>
+<script src="js/data.js?v=20260926o"></script>
+<script src="js/preload.js?v=20260926o"></script>
+<script src="js/pages/mot-de-passe.js?v=20260926o"></script>
+</body>
+</html>

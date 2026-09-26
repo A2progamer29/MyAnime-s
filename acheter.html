@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr" data-preload>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Acheter une clé Premium — LumaAnime</title>
+<meta name="description" content="Achat d'une clé Premium LumaAnime, paiement sécurisé par SumUp.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#0D0D13">
+<link rel="icon" href="assets/logos/favicon-64.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
+<link rel="preconnect" href="https://graphql.anilist.co" crossorigin>
+<link rel="preconnect" href="https://s4.anilist.co">
+<link rel="preload" href="assets/fonts/unbounded-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css?v=20260926o">
+<link rel="stylesheet" href="css/pages.css?v=20260926o">
+<script src="js/theme-boot.js?v=20260926o"></script>
+</head>
+<body data-page="acheter">
+<a class="skip-link" href="#contenu">Aller au contenu principal</a>
+<header class="site-header" data-site-header></header>
+<script src="js/layout.js?v=20260926o"></script>
+<main id="contenu" tabindex="-1">
+  <section class="page-head">
+    <div class="wrap page-head-grid">
+      <p class="page-kana" aria-hidden="true">購入</p>
+      <div>
+        <nav class="breadcrumb" aria-label="Fil d'Ariane"><ol><li><a href="index.html">Accueil</a></li><li><a href="premium.html">Premium</a></li><li aria-current="page">Acheter une clé</li></ol></nav>
+        <h1 class="page-title">Acheter une clé Premium</h1>
+        <p class="page-lead">Paiement sécurisé par SumUp. Ta clé s'affiche dès que le paiement est confirmé : tu l'actives sur ton compte ou tu l'offres.</p>
+      </div>
+    </div>
+  </section>
+  <div class="wrap checkout-grid">
+    <aside class="checkout-summary" aria-label="Récapitulatif de la commande" data-checkout-summary></aside>
+    <div class="checkout-panel">
+      <div data-checkout-guard hidden></div>
+      <form id="checkout-form" class="form-stack" novalidate hidden>
+        <div class="form-alert" role="alert" data-form-alert></div>
+        <label class="check">
+          <input type="checkbox" id="checkout-gift" name="gift">
+          <span>C'est un cadeau : ne pas activer la clé sur mon compte après le paiement.</span>
+        </label>
+        <div class="field">
+          <label class="check">
+            <input type="checkbox" id="checkout-cgv" name="cgv" required aria-describedby="checkout-cgv-error">
+            <span>J'accepte les <a href="conditions.html#premium" target="_blank" rel="noopener">conditions de vente<span class="sr-only"> (s'ouvre dans un nouvel onglet)</span></a>.</span>
+          </label>
+          <p class="field-error" id="checkout-cgv-error"></p>
+        </div>
+        <div class="field">
+          <label class="check">
+            <input type="checkbox" id="checkout-delivery" name="delivery" required aria-describedby="checkout-delivery-error">
+            <span>Je demande que la clé me soit délivrée immédiatement après le paiement, et je reconnais perdre mon droit de rétractation dès qu'elle est affichée.</span>
+          </label>
+          <p class="field-error" id="checkout-delivery-error"></p>
+        </div>
+        <button class="btn btn-primary btn-lg btn-block" type="submit" data-pay-btn><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#card"></use></svg><span data-pay-label>Payer avec SumUp</span></button>
+        <p class="field-hint">Tes données de carte sont saisies dans le formulaire sécurisé de SumUp : LumaAnime ne les voit jamais.</p>
+      </form>
+      <div class="sumup-card" id="sumup-card"></div>
+      <section class="key-reveal" data-key-reveal hidden aria-labelledby="key-title">
+        <h2 class="section-title" id="key-title" tabindex="-1">Ta clé Premium</h2>
+        <p class="key-code" data-key-value></p>
+        <div class="action-row">
+          <button class="btn" type="button" data-copy-key><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#copy"></use></svg>Copier la clé</button>
+          <button class="btn btn-primary" type="button" data-activate-key hidden><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#key"></use></svg>Activer sur mon compte</button>
+        </div>
+        <p class="field-hint" data-key-note></p>
+      </section>
+    </div>
+  </div>
+</main>
+<footer class="site-footer" data-site-footer></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
+<script src="js/supabase-config.js?v=20260926o"></script>
+<script src="js/supabase-client.js?v=20260926o"></script>
+<script src="js/premium.js?v=20260926o"></script>
+<script src="js/ui.js?v=20260926o"></script>
+<script src="js/data.js?v=20260926o"></script>
+<script src="js/preload.js?v=20260926o"></script>
+<script src="js/pages/acheter.js?v=20260926o"></script>
+</body>
+</html>

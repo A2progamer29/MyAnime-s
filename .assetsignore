@@ -1,0 +1,8 @@
+wrangler.jsonc
+.assetsignore
+worker/
+functions/
+supabase/
+.wrangler/
+node_modules/
+deployer.cmd
