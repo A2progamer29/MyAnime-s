@@ -2,6 +2,8 @@
   "name": "test",
   "main": "worker/index.js",
   "compatibility_date": "2026-09-01",
+  "workers_dev": false,
+  "preview_urls": false,
   "ai": { "binding": "AI" },
   "assets": {
     "directory": ".",

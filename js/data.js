@@ -102,7 +102,8 @@ function anilist(query, variables, maxAge) {
 }
 
 /* ---- Libellés en français ---- */
-var FORMAT_FR = { TV: 'Série TV', TV_SHORT: 'Série courte', MOVIE: 'Film', SPECIAL: 'Spécial', OVA: 'OVA', ONA: 'ONA', MUSIC: 'Clip' };
+var EPISODE_KIND_FR = { episode: 'Épisode', special: 'Spécial', ova: 'OVA', ona: 'ONA', movie: 'Film', recap: 'Récapitulatif' };
+var FORMAT_FR ={ TV: 'Anime', TV_SHORT: 'Série courte', MOVIE: 'Film', SPECIAL: 'Spécial', OVA: 'OVA', ONA: 'ONA', MUSIC: 'Clip' };
 var STATUS_FR = { FINISHED: 'Diffusion terminée', RELEASING: 'En cours de diffusion', NOT_YET_RELEASED: 'Pas encore diffusé', CANCELLED: 'Annulé', HIATUS: 'En pause' };
 var SEASON_FR = { WINTER: 'Hiver', SPRING: 'Printemps', SUMMER: 'Été', FALL: 'Automne' };
 var SOURCE_FR = { ORIGINAL: 'Œuvre originale', MANGA: 'Manga', LIGHT_NOVEL: 'Light novel', VISUAL_NOVEL: 'Visual novel', VIDEO_GAME: 'Jeu vidéo', NOVEL: 'Roman', WEB_NOVEL: 'Web novel', ANIME: 'Anime', MANHWA: 'Manhwa', MANHUA: 'Manhua', WEB_MANGA: 'Web manga', LIVE_ACTION: 'Film en prises de vue réelles', GAME: 'Jeu', COMIC: 'Comics', MULTIMEDIA_PROJECT: 'Projet multimédia', PICTURE_BOOK: 'Livre illustré', DOUJINSHI: 'Doujinshi', OTHER: 'Autre' };
@@ -114,7 +115,14 @@ var GENRE_FR = {
 
 function typeFr(format) { return FORMAT_FR[format] || format || ''; }
 function genreFr(name) { return GENRE_FR[name] || name; }
-function scoreFr(score) { return Number(score).toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }); }
+// Notes sur 100 (AniList donne directement une note de 0 à 100)
+function scoreFr(score) { return String(Math.round(Number(score) || 0)); }
+// Couleur : rouge en dessous de 40, orange de 40 à 69, vert à partir de 70
+function scoreTone(score) { var n = Number(score) || 0; return n < 40 ? 'low' : n < 70 ? 'mid' : 'high'; }
+function scoreHTML(score, source) {
+  return '<span class="score score--' + scoreTone(score) + '">' + scoreFr(score) + '<span class="score-max">/100</span></span>' +
+    '<span class="sr-only"> sur 100' + (source ? ' (' + source + ')' : '') + '</span>';
+}
 function truncate(text, max) {
   var t = String(text || '').trim();
   return t.length > max ? t.slice(0, max).replace(/\s+\S*$/, '') + '…' : t;
@@ -128,7 +136,13 @@ function htmlToText(html) {
 }
 
 // Titres en anglais quand AniList en connaît un, sinon en japonais romanisé
+var MAL_BY_ID = {};
+function rememberMalId(m) {
+  if (m && m.id && m.idMal) MAL_BY_ID[Number(m.id)] = Number(m.idMal);
+}
+
 function toAnime(m) {
+  rememberMalId(m);
   var cover = m.coverImage || {};
   var t = m.title || {};
   return {
@@ -146,7 +160,7 @@ function toAnime(m) {
     duration: m.duration,
     season: m.season,
     year: m.seasonYear,
-    score: m.averageScore ? m.averageScore / 10 : null,
+    score: m.averageScore || null,
     genres: (m.genres || []).map(genreFr),
     isAdult: !!m.isAdult,
     description: m.description ? htmlToText(m.description) : ''
@@ -158,6 +172,32 @@ function listAnime(a) {
 }
 
 function detailsHref(a) { return 'details.html?id=' + Number(a.id); }
+function episodeHref(root, season, number) {
+  return 'lecteur.html?id=' + Number(root) + '&season=' + Number(season) + '&episode=' + Number(number);
+}
+// avail = élément renvoyé par loadAvailability : on vise directement le premier épisode jouable.
+// Sans épisode jouable confirmé, on renvoie vers la fiche (jamais vers un lecteur vide).
+function watchHref(a, avail) {
+  if (!avail || !avail.first || !(Number(avail.root) > 0)) return detailsHref(a);
+  var season = avail.season !== null && avail.season !== undefined ? avail.season : avail.first.season;
+  return episodeHref(avail.root, season, avail.first.number);
+}
+
+/* ---- Disponibilité des épisodes sur LumaAnime (fonction serveur, script SQL v14) ---- */
+// Renvoie { id: { root, season, labels, first } } pour les animes jouables (un id absent = rien de jouable),
+// ou null si la disponibilité n'a pas pu être vérifiée.
+async function loadAvailability(ids) {
+  if (typeof publicAvailableAnimes !== 'function') return null;
+  try {
+    var res = await publicAvailableAnimes(ids);
+    if (!res || !res.ok) return null;
+    var map = {};
+    (res.items || []).forEach(function (it) {
+      if (it && it.first && Number(it.root) > 0 && Number.isInteger(Number(it.first.number))) map[Number(it.anilist_id)] = it;
+    });
+    return map;
+  } catch (e) { return null; }
+}
 
 /* ---- Saisons et semaines ---- */
 var SEASON_KEYS = ['WINTER', 'SPRING', 'SUMMER', 'FALL'];
@@ -252,7 +292,8 @@ function synopsisServiceOff() {
 async function fetchSynopsisBatch(ids) {
   var out = {};
   try {
-    var res = await fetch('/api/synopsis?ids=' + ids.join(','), { headers: { Accept: 'application/json' } });
+    var mal = ids.map(function (id) { return MAL_BY_ID[id] || 0; });
+    var res = await fetch('/api/synopsis?ids=' + ids.join(',') + '&mal=' + mal.join(','), { headers: { Accept: 'application/json' } });
     if (res.status === 503 || res.status === 404) {
       try { sessionStorage.setItem(CACHE_PREFIX + 'fr_off', String(Date.now() + 10 * 60 * 1000)); } catch (e) {}
       return out;

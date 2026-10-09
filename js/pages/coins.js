@@ -31,6 +31,7 @@ function renderCoinsPage() {
   document.querySelector('[data-coins-streak]').innerHTML = icon('flame') + (u.streak ? 'Série en cours : ' + u.streak + ' jour' + (u.streak > 1 ? 's' : '') + ' consécutif' + (u.streak > 1 ? 's' : '') : 'Aucune série en cours');
   renderDaily();
   renderShop();
+  renderProgress();
   renderAchievements();
   renderLedger();
 }
@@ -94,47 +95,127 @@ function renderDaily() {
   });
 }
 
-/* ---- Boutique ---- */
-function renderShop() {
+/* ---- Boutique : Soutien par paliers de 30, 60 ou 90 jours ---- */
+var COIN_DAYS = [30, 60, 90];
+
+async function renderShop() {
   var u = coinsUser;
   var status = premiumStatus(u);
   var shop = document.querySelector('[data-coins-shop]');
-  shop.innerHTML = Object.keys(PREMIUM_TIERS).map(function (k) {
-    var t = PREMIUM_TIERS[k];
-    var pct = Math.min(100, Math.round((u.coins / t.coins) * 100));
-    var missing = Math.max(0, t.coins - u.coins);
-    var blocked = status.active && status.lifetime;
+  var cfg = (typeof loadSiteSettings === 'function' ? await loadSiteSettings() : null) || {};
+  var tiers = cfg.coin_tiers || {};
+  shop.innerHTML = COIN_DAYS.map(function (days) {
+    var cost = Number(tiers[days]) || 0;
+    var pct = cost ? Math.min(100, Math.round((u.coins / cost) * 100)) : 0;
+    var missing = Math.max(0, cost - u.coins);
     var action;
-    if (blocked) action = '<p>Tu as déjà Soutien + à vie : aucun échange n\'est nécessaire.</p>';
+    if (!cost) action = '<p class="muted">Prix indisponible pour le moment.</p>';
+    else if (status.active && status.lifetime) action = '<p>Tu as déjà Soutien + à vie : aucun échange n\'est nécessaire.</p>';
     else if (missing) action = '<p>Il te manque <strong class="coin-amount">' + formatCoins(missing) + '</strong>.</p>' +
       '<button class="btn btn-sm" type="button" disabled>' + icon('lock') + '<span>Pas assez de coins</span></button>';
-    else action = '<button class="btn btn-primary btn-sm" type="button" data-buy-tier="' + k + '">' + icon('crown') + '<span>Débloquer ' + escapeHTML(t.name) + ' pour ' + formatCoins(t.coins) + '</span></button>';
-    return '<li>' +
-      '<h3>' + escapeHTML(t.name) + ' <span class="muted">· ' + t.durationLabel + '</span></h3>' +
-      '<p class="coin-amount">' + icon('coin') + formatCoins(t.coins) + '</p>' +
-      '<div class="meter" role="progressbar" aria-label="Progression vers ' + escapeHTML(t.name) + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + pct + '%"></span></div>' +
-      '<p>' + escapeHTML(t.perks.join(' · ')) + '</p>' +
+    else action = '<button class="btn btn-primary btn-sm" type="button" data-buy-days="' + days + '" data-cost="' + cost + '">' + icon('crown') + '<span>Échanger contre ' + days + ' jours</span></button>';
+    return '<li class="shop-tier">' +
+      '<h3><span class="shop-days">' + days + ' jours</span> <span class="muted">· Soutien</span></h3>' +
+      '<p class="coin-amount">' + icon('coin') + (cost ? formatCoins(cost) : '—') + '</p>' +
+      '<div class="meter" role="progressbar" aria-label="Progression vers ' + days + ' jours de Soutien" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + pct + '%"></span></div>' +
+      '<p>' + escapeHTML(PREMIUM_TIERS.soutien.perks.join(' · ')) + '</p>' +
       action +
     '</li>';
   }).join('');
 
-  shop.querySelectorAll('[data-buy-tier]').forEach(function (btn) {
+  shop.querySelectorAll('[data-buy-days]').forEach(function (btn) {
     btn.addEventListener('click', async function () {
-      var t = PREMIUM_TIERS[btn.getAttribute('data-buy-tier')];
+      var days = Number(btn.getAttribute('data-buy-days'));
+      var cost = Number(btn.getAttribute('data-cost'));
+      var st = premiumStatus(coinsUser);
       var ok = await confirmDialog({
-        title: 'Débloquer ' + t.name + ' ?',
-        message: formatCoins(t.coins) + ' seront retirés de ton solde. ' + (t.durationDays ? 'Tu obtiens 30 jours de Premium (ajoutés à ta date d\'expiration si tu es déjà Soutien).' : 'Tu obtiens le Premium à vie.') + ' Cette opération ne peut pas être annulée.',
-        confirmLabel: 'Échanger ' + formatCoins(t.coins),
+        title: 'Échanger contre ' + days + ' jours de Soutien ?',
+        message: formatCoins(cost) + ' seront retirés de ton solde. ' +
+          (st.active && st.until ? days + ' jours s\'ajoutent à ton Premium actuel, qui se termine le ' + formatDateFr(st.until) + '.' : 'Ton Soutien commence tout de suite pour ' + days + ' jours.') +
+          ' Cette opération ne peut pas être annulée.',
+        confirmLabel: 'Échanger ' + formatCoins(cost),
         cancelLabel: 'Garder mes coins'
       });
       if (!ok) return;
+      shop.querySelectorAll('[data-buy-days]').forEach(function (b) { b.disabled = true; });
       setBusy(btn, true, 'Échange en cours…');
-      var res = await buyPremiumWithCoins(t.key);
-      if (!res.ok) { setBusy(btn, false); showToast(res.error, 'error'); return; }
-      showToast('Premium ' + t.name + ' activé ' + (res.until ? 'jusqu\'au ' + formatDateFr(res.until) : 'à vie') + ' !', 'success');
+      var res = await buyPremiumDays(days);
+      if (!res.ok) { setBusy(btn, false); showToast(res.error, 'error'); await reloadCoinsUser(); return; }
+      showToast('Soutien activé jusqu\'au ' + formatDateFr(res.until) + ' !', 'success');
       await reloadCoinsUser();
     });
   });
+}
+
+/* ---- Succès à paliers ---- */
+var progressClaimed = false;
+
+function tierMinAge(goal) { return goal >= 1000 ? 30 : goal >= 100 ? 7 : 0; }
+
+function tierRewardText(t) {
+  var parts = [];
+  if (t.reward_coins) parts.push('+' + Number(t.reward_coins).toLocaleString('fr-FR') + ' AC');
+  if (t.badge) parts.push('badge « ' + t.badge.name + ' »');
+  if (t.decoration) parts.push('décoration « ' + t.decoration + ' »');
+  return parts.join(', ');
+}
+
+async function renderProgress() {
+  var list = document.querySelector('[data-progress]');
+  if (!list) return;
+  if (!progressClaimed) {
+    progressClaimed = true;
+    var claim = await claimProgress();
+    if (claim.ok && claim.reached && claim.reached.length) {
+      var last = claim.reached[claim.reached.length - 1];
+      showToast(claim.reached.length === 1
+        ? 'Palier atteint : ' + last.achievement + ' ' + last.level + (claim.coins_gained ? ' (+' + claim.coins_gained + ' AC)' : '') + ' !'
+        : claim.reached.length + ' paliers atteints' + (claim.coins_gained ? ' (+' + claim.coins_gained.toLocaleString('fr-FR') + ' AC)' : '') + ' !', 'success');
+      await reloadCoinsUser();
+      return;
+    }
+  }
+  var ov = await progressOverview();
+  if (!ov.ok) {
+    list.innerHTML = '<li class="catalog-status">' + (ov.error === 'missing' ? 'Les succès à paliers seront disponibles très bientôt.' : 'Progression indisponible pour le moment.') + '</li>';
+    return;
+  }
+  var metrics = ov.metrics || {};
+  var done = ov.achieved || [];
+  if (!ov.achievements.length) { list.innerHTML = '<li class="catalog-status">Aucun succès à paliers pour le moment.</li>'; return; }
+  list.innerHTML = ov.achievements.map(function (a) {
+    var tiers = a.tiers || [];
+    var value = Number(metrics[a.metric] || 0);
+    var reached = tiers.filter(function (t) { return done.indexOf(t.id) !== -1; }).length;
+    var next = tiers.filter(function (t) { return done.indexOf(t.id) === -1; })[0];
+    var prevGoal = reached ? tiers[reached - 1].goal : 0;
+    var unit = a.unit ? ' ' + a.unit : '';
+    var pct = next ? Math.max(0, Math.min(100, Math.floor(((value - prevGoal) / (next.goal - prevGoal)) * 100))) : 100;
+    var afterNext = next ? tiers[tiers.indexOf(next) + 1] : null;
+    var badges = tiers.filter(function (t) { return t.badge && done.indexOf(t.id) !== -1; }).map(function (t) { return t.badge; });
+    return '<li class="prog-card' + (next ? '' : ' is-complete') + '">' +
+      '<div class="prog-head">' +
+        '<div class="ach-icon" aria-hidden="true">' + icon(a.icon || 'trophy') + '</div>' +
+        '<div><h3>' + escapeHTML(a.name) + '</h3><p class="prog-level">Palier ' + reached + ' / ' + tiers.length + '</p></div>' +
+      '</div>' +
+      (a.description ? '<p class="ach-text">' + escapeHTML(a.description) + '</p>' : '') +
+      (next
+        ? '<p class="prog-value"><strong>' + Math.min(value, next.goal).toLocaleString('fr-FR') + ' / ' + next.goal.toLocaleString('fr-FR') + '</strong>' + escapeHTML(unit) + '</p>' +
+          '<div class="meter meter--thin" role="progressbar" aria-label="Progression vers le palier ' + next.level + ' : ' + escapeHTML(a.name) + '" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + pct + '"><span style="width:' + pct + '%"></span></div>' +
+          '<p class="prog-next">Palier ' + next.level + (tierRewardText(next) ? ' · récompense : ' + escapeHTML(tierRewardText(next)) : '') + '</p>' +
+          (value >= next.goal && (metrics.age_days || 0) < tierMinAge(next.goal)
+            ? '<p class="prog-next muted">Disponible après ' + tierMinAge(next.goal) + ' jours d\'ancienneté</p>' : '') +
+          (afterNext ? '<p class="prog-next muted">Ensuite : ' + afterNext.goal.toLocaleString('fr-FR') + escapeHTML(unit) + '</p>' : '')
+        : '<p class="prog-value"><strong>' + value.toLocaleString('fr-FR') + '</strong>' + escapeHTML(unit) + '</p><p class="prog-next">' + icon('check') + ' Tous les paliers sont terminés. Bravo !</p>') +
+      (badges.length ? '<div class="prog-badges">' + badges.map(badgeHTML).join('') + '</div>' : '') +
+      '<details class="prog-tiers"><summary>Voir les ' + tiers.length + ' paliers</summary><ol>' +
+        tiers.map(function (t) {
+          var ok = done.indexOf(t.id) !== -1;
+          return '<li class="' + (ok ? 'is-done' : '') + '"><span>' + (ok ? icon('check') : '') + 'Palier ' + t.level + '</span><span>' + t.goal.toLocaleString('fr-FR') + escapeHTML(unit) + '</span><span class="muted">' + escapeHTML(tierRewardText(t) || '—') + '</span></li>';
+        }).join('') +
+      '</ol></details>' +
+    '</li>';
+  }).join('');
 }
 
 /* ---- Succès ---- */
@@ -244,10 +325,13 @@ function ledgerLabel(reason) {
     var a = ACHIEVEMENTS.filter(function (x) { return x.code === reason.slice(7); })[0];
     return 'Succès : ' + (a ? a.title : reason.slice(7));
   }
+  if (reason.indexOf('premium:soutien_') === 0) return 'Échange : ' + reason.slice(16) + ' jours de Soutien';
   if (reason.indexOf('premium:') === 0) {
     var t = PREMIUM_TIERS[reason.slice(8)];
     return 'Échange : Premium ' + (t ? t.name : '');
   }
+  if (reason.indexOf('palier:') === 0) return 'Palier de succès atteint';
+  if (reason.indexOf('decoration:') === 0) return 'Décoration de profil';
   return reason;
 }
 

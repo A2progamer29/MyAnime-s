@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr" data-preload>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wishboard — LumaAnime</title>
+<meta name="description" content="Propose les animes que tu veux voir sur LumaAnime et vote pour les propositions des autres.">
+<meta name="theme-color" content="#0D0D13">
+<link rel="icon" href="assets/logos/logo.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
+<link rel="preconnect" href="https://graphql.anilist.co" crossorigin>
+<link rel="preconnect" href="https://s4.anilist.co">
+<link rel="preload" href="assets/fonts/unbounded-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css?v=20261007b">
+<link rel="stylesheet" href="css/pages.css?v=20261007b">
+<script src="js/theme-boot.js?v=20261007b"></script>
+</head>
+<body data-page="wishboard">
+<a class="skip-link" href="#contenu">Aller au contenu principal</a>
+<header class="site-header" data-site-header></header>
+<script src="js/layout.js?v=20261007b"></script>
+<main id="contenu" tabindex="-1">
+  <section class="page-head">
+    <div class="wrap page-head-grid">
+      <p class="page-kana" aria-hidden="true">ウィッシュ</p>
+      <div>
+        <nav class="breadcrumb" aria-label="Fil d'Ariane"><ol><li><a href="index.html">Accueil</a></li><li aria-current="page">Wishboard</li></ol></nav>
+        <h1 class="page-title">Wishboard</h1>
+        <p class="page-lead">Propose les animes que tu veux voir arriver sur LumaAnime et vote pour ceux des autres. Les plus demandés passent en priorité devant l'équipe.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="wrap section wish-propose" aria-labelledby="wish-propose-title">
+    <h2 class="section-title" id="wish-propose-title">Proposer un anime</h2>
+    <form class="wish-search" data-wish-search role="search" novalidate>
+      <label class="sr-only" for="wish-q">Rechercher un anime à proposer</label>
+      <input class="input" id="wish-q" name="q" type="search" maxlength="100" autocomplete="off" placeholder="Titre d'un anime, par ex. Frieren">
+      <button class="btn btn-primary" type="submit"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg?v=20261007b#search"></use></svg><span>Rechercher</span></button>
+    </form>
+    <p class="field-hint" data-wish-login hidden>Tu peux voter sans compte. Pour proposer un anime, <a class="link" href="connexion.html?next=wishboard.html">connecte-toi</a> ou <a class="link" href="inscription.html">crée un compte</a>.</p>
+    <p class="catalog-status" role="status" data-wish-search-status></p>
+    <ul class="wish-results" data-wish-results></ul>
+  </section>
+
+  <section class="wrap section" aria-labelledby="wish-board-title">
+    <div class="wish-board-head">
+      <h2 class="section-title" id="wish-board-title">Les propositions</h2>
+      <span class="wish-count" data-wish-count role="status"></span>
+    </div>
+    <div class="wish-toolbar">
+      <div class="tabs" role="tablist" aria-label="Filtrer par statut" data-wish-tabs>
+        <button class="tab" type="button" role="tab" aria-selected="true" data-status="all">Toutes</button>
+        <button class="tab" type="button" role="tab" aria-selected="false" data-status="pending">En attente</button>
+        <button class="tab" type="button" role="tab" aria-selected="false" data-status="accepted">Acceptées</button>
+      </div>
+      <div class="wish-filters">
+        <label class="sr-only" for="wish-filter">Filtrer par titre</label>
+        <input class="input" id="wish-filter" type="search" maxlength="100" autocomplete="off" placeholder="Filtrer par titre" data-wish-filter>
+        <label class="sr-only" for="wish-sort">Trier</label>
+        <select class="select" id="wish-sort" data-wish-sort>
+          <option value="top">Les plus votés</option>
+          <option value="low">Les moins votés</option>
+          <option value="new">Les plus récents</option>
+          <option value="old">Les plus anciens</option>
+        </select>
+      </div>
+    </div>
+    <div class="wish-board" data-wish-list>
+      <p class="catalog-status">Chargement des propositions…</p>
+    </div>
+  </section>
+</main>
+<footer class="site-footer" data-site-footer></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
+<script src="js/supabase-config.js?v=20261007b"></script>
+<script src="js/supabase-client.js?v=20261007b"></script>
+<script src="js/premium.js?v=20261007b"></script>
+<script src="js/ui.js?v=20261007b"></script>
+<script src="js/data.js?v=20261007b"></script>
+<script src="js/preload.js?v=20261007b"></script>
+<script src="js/watchlist.js?v=20261007b"></script>
+<script src="js/api.js?v=20261007b"></script>
+<script src="js/pages/wishboard.js?v=20261007b"></script>
+</body>
+</html>

@@ -1,19 +1,21 @@
-// Point d'entrée du Worker « test » : les routes /api/* passent par les fonctions serveur,
-// tout le reste est servi tel quel depuis les fichiers du site.
 import { onRequestGet as catalogue } from '../functions/api/catalogue.js';
 import { onRequestGet as synopsis } from '../functions/api/synopsis.js';
-import { onRequestGet as genres } from '../functions/api/genres.js';
 import { onRequestGet as checkoutStatus } from '../functions/api/checkout/status.js';
 import { onRequestPost as checkoutCreate } from '../functions/api/checkout/create.js';
 import { onRequestPost as checkoutComplete } from '../functions/api/checkout/complete.js';
+import { onRequestPost as checkoutCancel } from '../functions/api/checkout/cancel.js';
+import { onRequestPost as engage } from '../functions/api/engage.js';
+import { onRequestPost as cspReport } from '../functions/api/csp-report.js';
 
 const ROUTES = {
   'GET /api/catalogue': catalogue,
   'GET /api/synopsis': synopsis,
-  'GET /api/genres': genres,
   'GET /api/checkout/status': checkoutStatus,
   'POST /api/checkout/create': checkoutCreate,
-  'POST /api/checkout/complete': checkoutComplete
+  'POST /api/checkout/complete': checkoutComplete,
+  'POST /api/checkout/cancel': checkoutCancel,
+  'POST /api/engage': engage,
+  'POST /api/csp-report': cspReport
 };
 
 export default {

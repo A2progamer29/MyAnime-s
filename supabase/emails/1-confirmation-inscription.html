@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark">
 <meta name="supported-color-schemes" content="dark">
-<title>Confirme ton compte LumaAnime</title>
+<title>Ton code d'inscription LumaAnime</title>
 <style>
   @font-face { font-family:'Unbounded'; font-style:normal; font-weight:200 900; src:url('https://lumanime.online/assets/fonts/unbounded-latin-wght-normal.woff2') format('woff2'); }
   @font-face { font-family:'Manrope'; font-style:normal; font-weight:200 800; src:url('https://lumanime.online/assets/fonts/manrope-latin-wght-normal.woff2') format('woff2'); }
@@ -18,7 +18,7 @@
 </style>
 </head>
 <body style="margin:0;padding:0;background-color:#0D0D13;">
-<div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;">Plus qu'une étape pour activer ton compte LumaAnime.</div>
+<div style="display:none;max-height:0;overflow:hidden;opacity:0;mso-hide:all;">Ton code pour activer ton compte LumaAnime : {{ .Token }}</div>
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#0D0D13" style="background-color:#0D0D13;">
   <tr>
     <td align="center" style="padding:36px 16px 40px;">
@@ -40,18 +40,15 @@
               <tr>
                 <td colspan="2" class="card-body" style="padding:6px 38px 36px;">
                   <p style="margin:0 0 12px;font-family:'Hiragino Sans', 'Yu Gothic', 'Noto Sans JP', 'Meiryo', sans-serif;font-size:12px;font-weight:700;letter-spacing:0.3em;color:#FF4D6D;">登録</p>
-                  <h1 class="title" style="margin:0;font-family:Unbounded, 'Arial Black', 'Helvetica Neue', Arial, sans-serif;font-size:27px;font-weight:900;line-height:1.15;letter-spacing:-0.02em;color:#F4F1EA;">Confirme ton adresse e-mail</h1>
-                  <p style="margin:16px 0 0;font-family:Manrope, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;font-size:16px;line-height:1.6;color:#C9C6D1;">Bienvenue sur LumaAnime&nbsp;! Il ne reste qu'une étape pour activer ton compte&nbsp;: confirme que cette adresse t'appartient.</p>
-                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:28px 0 8px;">
+                  <h1 class="title" style="margin:0;font-family:Unbounded, 'Arial Black', 'Helvetica Neue', Arial, sans-serif;font-size:27px;font-weight:900;line-height:1.15;letter-spacing:-0.02em;color:#F4F1EA;">Ton code d'inscription</h1>
+                  <p style="margin:16px 0 0;font-family:Manrope, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;font-size:16px;line-height:1.6;color:#C9C6D1;">Bienvenue sur LumaAnime&nbsp;! Il ne reste qu'une étape&nbsp;: saisis ce code sur la page d'inscription pour activer ton compte.</p>
+                  <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin:22px 0 4px;">
                 <tr>
-                  <td bgcolor="#FF4D6D" style="background-color:#FF4D6D;">
-                    <a href="{{ .ConfirmationURL }}" target="_blank" style="display:inline-block;padding:15px 16px 15px 26px;font-family:Manrope, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;font-size:15px;font-weight:800;line-height:1.2;color:#0D0D13;text-decoration:none;">Confirmer mon adresse&nbsp;&rarr;</a>
-                  </td>
-                  <td bgcolor="#FF4D6D" valign="top" width="12" style="background-color:#FF4D6D;width:12px;padding:0;"><div style="width:0;height:0;border-top:12px solid #16161F;border-left:12px solid #C93A54;font-size:0;line-height:0;"></div></td>
+                  <td bgcolor="#0D0D13" style="background-color:#0D0D13;border-left:4px solid #FF4D6D;padding:16px 24px;font-family:'SFMono-Regular', Consolas, 'Liberation Mono', monospace;font-size:30px;font-weight:700;letter-spacing:0.3em;color:#F4F1EA;">{{ .Token }}</td>
                 </tr>
               </table>
-                  <p style="margin:18px 0 0;font-family:Manrope, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;font-size:13px;line-height:1.55;color:#8C8A98;">Le bouton ne fonctionne pas ? Copie ce lien dans ton navigateur&nbsp;:<br><a href="{{ .ConfirmationURL }}" target="_blank" style="color:#FFC2CE;word-break:break-all;">{{ .ConfirmationURL }}</a></p>
-                  <p style="margin:24px 0 0;padding-top:18px;border-top:1px solid #2A2A36;font-family:Manrope, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;font-size:13px;line-height:1.55;color:#8C8A98;">Ce lien ne fonctionne qu'une seule fois et expire après un délai limité. Si tu n'as pas créé de compte, ignore simplement cet e-mail.</p>
+                  
+                  <p style="margin:24px 0 0;padding-top:18px;border-top:1px solid #2A2A36;font-family:Manrope, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif;font-size:13px;line-height:1.55;color:#8C8A98;">Ce code expire après un délai limité et ne fonctionne qu'une seule fois. Ne le communique à personne&nbsp;: l'équipe LumaAnime ne te le demandera jamais. Si tu n'as pas créé de compte, ignore simplement cet e-mail.</p>
                 </td>
               </tr>
             </table>

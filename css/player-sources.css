@@ -1,0 +1,139 @@
+/* =========================================================
+   LumaAnime — player-sources.css
+   Lecteur : langues, lecteurs intégrés (iframe), messages, liste des épisodes
+   ========================================================= */
+
+/* Le titre long (anime + épisode) ne doit jamais élargir le lecteur au-delà de l'écran */
+.wp{ grid-template-columns:minmax(0, 1fr); }
+
+/* ---- Lecteur intégré et messages sur la vidéo ---- */
+.wp-frame{ position:absolute; inset:0; width:100%; height:100%; border:0; background:#000; }
+
+.wp-stage-msg{
+  position:absolute; inset:0; z-index:1;
+  display:grid; place-content:center; justify-items:center; gap:8px;
+  padding:24px clamp(16px, 4vw, 48px);
+  background:#000; color:var(--wp-dim);
+  text-align:center; font-size:var(--fs-sm);
+}
+.wp-stage-msg p{ margin:0; max-width:52ch; }
+.wp-stage-title{ color:var(--wp-fg); font-weight:800; font-size:clamp(1rem, .95rem + .4vw, 1.25rem); }
+.wp-stage-icon{ width:34px; height:34px; color:var(--gold); }
+.wp-stage-actions{ display:flex; flex-wrap:wrap; justify-content:center; gap:10px; margin-top:8px !important; }
+.wp-stage-msg a:focus-visible{ outline:3px solid var(--focus); outline-offset:2px; }
+
+/* Lecteur intégré ou bloqué : les commandes qui pilotent la balise <video> sont masquées */
+.wp.is-embed .wp-stage video,
+.wp.is-blocked .wp-stage video,
+.wp.is-embed .wp-center,
+.wp.is-blocked .wp-center,
+.wp.is-embed .wp-flash,
+.wp.is-blocked .wp-flash,
+.wp.is-embed .wp-progress,
+.wp.is-blocked .wp-progress{ display:none; }
+
+.wp.is-embed .wp-bar [data-play],
+.wp.is-blocked .wp-bar [data-play],
+.wp.is-embed .wp-bar [data-skip],
+.wp.is-blocked .wp-bar [data-skip],
+.wp.is-embed .wp-bar .wp-volume,
+.wp.is-blocked .wp-bar .wp-volume,
+.wp.is-embed .wp-bar .wp-time,
+.wp.is-blocked .wp-bar .wp-time,
+.wp.is-embed .wp-bar [data-settings],
+.wp.is-blocked .wp-bar [data-settings],
+.wp.is-embed .wp-bar [data-cast],
+.wp.is-blocked .wp-bar [data-cast],
+.wp.is-embed .wp-bar [data-pip],
+.wp.is-blocked .wp-bar [data-pip],
+.wp.is-blocked .wp-bar [data-fullscreen],
+.wp.is-embed .wp-menu,
+.wp.is-blocked .wp-menu{ display:none; }
+
+.wp.is-blocked .wp-bar:not(:has(.wp-nav:not([hidden]))){ display:none; }
+
+/* ---- Épisode précédent / suivant ---- */
+.wp-btn.wp-nav{
+  display:inline-flex; align-items:center; gap:4px;
+  width:auto; padding:0 12px;
+  border-radius:999px;
+  font-size:var(--fs-sm); font-weight:800;
+}
+.wp-btn.wp-nav .icon{ width:20px; height:20px; flex-shrink:0; }
+
+/* ---- Choix de la langue et du lecteur ---- */
+.wp-sources{
+  display:grid; gap:10px;
+  padding:12px clamp(8px, 2vw, 22px) 16px;
+  background:#000;
+  border-top:1px solid rgba(244,241,234,.1);
+  transition:opacity .25s ease;
+}
+.wp-source-row{ display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px; }
+.wp-source-label{ min-width:5.5em; color:var(--wp-dim); font-size:var(--fs-xs); font-weight:800; letter-spacing:.06em; text-transform:uppercase; }
+.wp-chips{ display:flex; flex-wrap:wrap; gap:6px; }
+.wp-chip{
+  display:inline-flex; align-items:center; gap:8px;
+  min-height:38px; padding:6px 14px;
+  border:1px solid rgba(244,241,234,.22); border-radius:999px;
+  background:transparent; color:var(--wp-fg);
+  font:inherit; font-size:var(--fs-sm); font-weight:800;
+  cursor:pointer;
+  transition:background-color .15s ease, border-color .15s ease, color .15s ease;
+}
+.wp-chip:hover{ background:rgba(255,255,255,.1); border-color:rgba(244,241,234,.45); }
+.wp-chip:focus-visible{ outline:2px solid var(--wp-fg); outline-offset:2px; }
+.wp-chip[aria-pressed="true"]{ background:var(--accent); border-color:var(--accent); color:var(--on-accent); }
+.wp-chip-badge{
+  padding:2px 7px; border-radius:999px;
+  background:rgba(245,185,66,.18); color:var(--gold);
+  font-size:.6875rem; font-weight:800; letter-spacing:.02em; white-space:nowrap;
+}
+.wp-chip[aria-pressed="true"] .wp-chip-badge{ background:rgba(13,13,19,.22); color:var(--on-accent); }
+
+.wp-source-actions{ display:flex; flex-wrap:wrap; gap:6px 18px; }
+.wp-source-actions:not(:has(> :not([hidden]))){ display:none; }
+.wp-link-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  min-height:36px; padding:4px 2px;
+  border:0; background:transparent; color:var(--wp-dim);
+  font:inherit; font-size:var(--fs-xs); font-weight:700;
+  text-decoration:underline; text-underline-offset:3px;
+  cursor:pointer;
+}
+.wp-link-btn .icon{ width:16px; height:16px; flex-shrink:0; }
+.wp-link-btn:hover{ color:var(--wp-fg); }
+.wp-link-btn:focus-visible{ outline:2px solid var(--wp-fg); outline-offset:2px; border-radius:4px; }
+.wp-link-btn[aria-disabled="true"]{ color:var(--wp-dim); text-decoration:none; cursor:default; opacity:.75; }
+
+.wp.is-playing.is-idle .wp-sources{ opacity:0; }
+.wp.is-playing.is-idle .wp-sources:focus-within{ opacity:1; }
+
+/* ---- Liste des épisodes : langues et accès anticipé ---- */
+.watch-season-sub{ text-transform:none; letter-spacing:0; font-weight:600; }
+.watch-episode-langs{ display:inline-flex; flex-wrap:wrap; justify-content:flex-end; gap:4px; flex-shrink:0; }
+.watch-lang{
+  padding:2px 6px;
+  background:var(--s3); color:var(--text-2);
+  font-size:.6875rem; font-weight:800; letter-spacing:.04em; line-height:1.4;
+}
+.watch-episode.is-current .watch-lang{ background:var(--s4); color:var(--text); }
+.watch-episode-lock{ display:inline-flex; flex-shrink:0; color:var(--gold); }
+.watch-episode-lock .icon{ width:16px; height:16px; }
+
+@media (max-width:599px){
+  .wp:not(.is-embed):not(.is-blocked) .wp-btn.wp-nav{ width:40px; padding:0; justify-content:center; }
+  .wp:not(.is-embed):not(.is-blocked) .wp-nav-text{ display:none; }
+  .wp-source-row{ gap:6px 10px; }
+  .wp-source-label{ min-width:0; width:100%; }
+  .watch-episode{ flex-wrap:wrap; gap:6px 12px; }
+  .watch-episode-name{ flex-basis:calc(100% - 3.5em); }
+  .watch-episode-langs{ margin-left:calc(2.2em + 12px); justify-content:flex-start; }
+}
+
+@media (prefers-reduced-motion:reduce){
+  .wp-chip, .wp-sources{ transition:none; }
+}
+
+/* Longues séries : le navigateur ne calcule l'affichage que des épisodes visibles */
+.watch-episode-list > li { content-visibility: auto; contain-intrinsic-size: auto 48px; }

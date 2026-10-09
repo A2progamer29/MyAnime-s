@@ -237,9 +237,10 @@ async function renderPendingOrders(container, onKey) {
   var orders = await listPendingOrders();
   container.innerHTML = orders.map(function (o) {
     var tier = PREMIUM_TIERS[o.tier];
-    return '<div class="notice"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#card"></use></svg><div class="notice-body">' +
-      '<p><strong>Paiement en attente de vérification</strong> : clé ' + escapeHTML(tier ? tier.name : o.tier) + ' du ' + escapeHTML(formatDateFr(o.created_at, true)) + '. Si tu as bien payé, vérifie le paiement pour récupérer ta clé.</p>' +
-      '<button class="btn btn-sm" type="button" data-check-order="' + escapeHTML(o.id) + '">Vérifier le paiement</button></div></div>';
+    return '<div class="notice" data-order-notice="' + escapeHTML(o.id) + '">' + icon('card') + '<div class="notice-body">' +
+      '<p><strong>Paiement en attente de vérification</strong> : clé ' + escapeHTML(tier ? tier.name : o.tier) + (o.amount ? ' (' + escapeHTML(Number(o.amount).toLocaleString('fr-FR', { style: 'currency', currency: 'EUR' })) + ')' : '') + ' du ' + escapeHTML(formatDateFr(o.created_at, true)) + '. Si tu as bien payé, vérifie le paiement pour récupérer ta clé. Sinon, tu peux l\'annuler.</p>' +
+      '<div class="action-row"><button class="btn btn-sm" type="button" data-check-order="' + escapeHTML(o.id) + '">Vérifier le paiement</button>' +
+      '<button class="btn btn-sm btn-ghost" type="button" data-cancel-order="' + escapeHTML(o.id) + '">' + icon('x') + '<span>Annuler ce paiement</span></button></div></div></div>';
   }).join('');
   container.querySelectorAll('[data-check-order]').forEach(function (btn) {
     btn.addEventListener('click', async function () {
@@ -248,7 +249,32 @@ async function renderPendingOrders(container, onKey) {
       setBusy(btn, false);
       if (!res.ok) { showToast(res.error || 'Le paiement n\'est pas confirmé par SumUp.', res.status === 409 ? 'warning' : 'error'); return; }
       showToast('Paiement confirmé : ta clé ' + formatKey(res.key) + ' est disponible.', 'success');
+      var done = container.querySelector('[data-order-notice="' + btn.getAttribute('data-check-order') + '"]');
+      if (done) done.remove();
       if (onKey) onKey(res.key);
+    });
+  });
+  container.querySelectorAll('[data-cancel-order]').forEach(function (btn) {
+    btn.addEventListener('click', async function () {
+      var id = btn.getAttribute('data-cancel-order');
+      var ok = await confirmDialog({
+        title: 'Annuler ce paiement ?',
+        message: 'Le paiement sera d\'abord vérifié auprès de SumUp. S\'il n\'a pas été encaissé, il est annulé et ne pourra plus être réglé : aucune clé ne sera créée. S\'il a déjà été encaissé, rien n\'est annulé et tu pourras récupérer ta clé.',
+        confirmLabel: 'Annuler le paiement',
+        cancelLabel: 'Garder',
+        danger: true
+      });
+      if (!ok) return;
+      setBusy(btn, true, 'Annulation…');
+      var res = await cancelCheckout(id);
+      if (!res.ok) {
+        setBusy(btn, false);
+        showToast(res.error || 'L\'annulation a échoué. Réessaie.', res.code === 'already_paid' ? 'warning' : 'error');
+        return;
+      }
+      var notice = container.querySelector('[data-order-notice="' + id + '"]');
+      if (notice) notice.remove();
+      showToast('Paiement annulé. Aucune somme ne sera prélevée pour cette commande.', 'success');
     });
   });
 }

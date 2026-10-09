@@ -11,7 +11,7 @@ function animeCardHTML(a, i) {
     '<div class="card-media"><div class="card-poster">' +
       (a.image ? '<img src="' + escapeHTML(a.image) + '" alt="" loading="lazy" decoding="async" width="230" height="325">' : '<span class="card-placeholder">' + icon('image') + '</span>') +
       (a.format ? '<span class="card-type">' + escapeHTML(typeFr(a.format)) + '</span>' : '') +
-      (a.score ? '<span class="card-score">' + icon('star', 'icon--fill') + scoreFr(a.score) + '<span class="sr-only"> sur 10</span></span>' : '') +
+      (a.score ? '<span class="card-score">' + scoreHTML(a.score) + '</span>' : '') +
     '</div></div>' +
     '<div class="card-body">' +
       '<h3 class="card-title"><a class="card-link" href="' + detailsHref(a) + '">' + escapeHTML(a.title) + '</a></h3>' +
@@ -48,6 +48,53 @@ function emptyStateHTML(tag, title, text) {
   return '<' + tag + ' class="state state--full">' + icon('search') + '<strong>' + escapeHTML(title) + '</strong><p>' + escapeHTML(text) + '</p></' + tag + '>';
 }
 
+/* ---- Disponibilité sur LumaAnime (épisodes jouables, langues) ---- */
+function validLabels(labels) {
+  return (Array.isArray(labels) ? labels : []).filter(function (l) { return typeof l === 'string' && l; });
+}
+
+// Badges de langue en liste (hors lien)
+// counts/total (facultatifs) : nombre d'épisodes par langue ; une langue partielle affiche « VF · 3/12 ép. »
+function langBadgesHTML(labels, labelledBy, counts, total) {
+  var list = validLabels(labels);
+  if (!list.length) return '';
+  var all = Number(total) || 0;
+  return '<ul class="lang-badges"' + (labelledBy ? ' aria-labelledby="' + escapeHTML(labelledBy) + '"' : '') + '>' +
+    list.map(function (l) {
+      var n = counts && Number(counts[l]);
+      var partial = all > 1 && n > 0 && n < all;
+      return '<li class="lang-badge">' + escapeHTML(l) +
+        (partial ? '<span class="lang-badge-count" aria-hidden="true"> · ' + n + '/' + all + ' ép.</span><span class="sr-only"> (' + n + (n > 1 ? ' épisodes' : ' épisode') + ' sur ' + all + ')</span>' : '') +
+        '</li>';
+    }).join('') + '</ul>';
+}
+
+// Badges de langue à l'intérieur d'un lien : simples spans, séparateurs lus par les lecteurs d'écran
+function langSpansHTML(labels) {
+  var list = validLabels(labels);
+  if (!list.length) return '';
+  return '<span class="lang-badges"><span class="sr-only">, en </span>' +
+    list.map(function (l) { return '<span class="lang-badge">' + escapeHTML(l) + '</span>'; }).join('<span class="sr-only"> ou </span>') + '</span>';
+}
+
+// Remplace un élément par du HTML en gardant le focus clavier s'il était dessus
+function replaceKeepingFocus(el, html) {
+  var tpl = document.createElement('template');
+  tpl.innerHTML = html;
+  var next = tpl.content.firstElementChild;
+  if (!next) return;
+  var focused = document.activeElement === el;
+  el.replaceWith(next);
+  if (focused) next.focus();
+}
+
+function heroWatchHTML(a, avail) {
+  if (avail) {
+    return '<a class="btn btn-primary btn-lg" href="' + escapeHTML(watchHref(a, avail)) + '" data-hero-watch="' + Number(a.id) + '">' + icon('play', 'icon--fill') + 'Regarder<span class="sr-only"> ' + escapeHTML(a.title) + '</span></a>';
+  }
+  return '<a class="btn btn-primary btn-lg" href="' + detailsHref(a) + '" data-hero-watch="' + Number(a.id) + '">' + icon('info') + 'Voir la fiche<span class="sr-only"> de ' + escapeHTML(a.title) + '</span></a>';
+}
+
 
 
 var HERO_DELAY = 7000;
@@ -73,12 +120,12 @@ async function loadHero() {
             '<ul class="chip-list">' +
               (a.format ? '<li class="chip">' + escapeHTML(typeFr(a.format)) + '</li>' : '') +
               (a.year ? '<li class="chip">' + Number(a.year) + '</li>' : '') +
-              (a.score ? '<li class="chip chip--score">' + icon('star', 'icon--fill') + scoreFr(a.score) + '<span class="sr-only"> sur 10 sur AniList</span></li>' : '') +
+              (a.score ? '<li class="chip chip--score">' + scoreHTML(a.score, 'AniList') + '</li>' : '') +
               a.genres.slice(0, 2).map(function (g) { return '<li class="chip">' + escapeHTML(g) + '</li>'; }).join('') +
             '</ul>' +
             (a.description ? '<p class="hero-synopsis" data-hero-synopsis="' + Number(a.id) + '" lang="en">' + escapeHTML(truncate(a.description, 260)) + '</p>' : '') +
             '<div class="hero-actions">' +
-              '<a class="btn btn-primary btn-lg" href="' + detailsHref(a) + '">Voir la fiche<span class="sr-only"> de ' + escapeHTML(a.title) + '</span>' + icon('arrow-right') + '</a>' +
+              heroWatchHTML(a, null) +
               listToggleIconHTML('watchlist', listAnime(a)) +
             '</div>' +
           '</div>' +
@@ -98,6 +145,16 @@ async function loadHero() {
 
     setupHeroCarousel(hero, items.length);
     refreshListButtons();
+
+    // « Regarder » seulement pour les animes qui ont un épisode jouable (un seul appel groupé)
+    if (typeof loadAvailability === 'function') loadAvailability(items.map(function (a) { return a.id; })).then(function (avail) {
+      if (!avail) return;
+      items.forEach(function (a) {
+        if (!avail[a.id]) return;
+        var btn = slidesRoot.querySelector('[data-hero-watch="' + Number(a.id) + '"]');
+        if (btn) replaceKeepingFocus(btn, heroWatchHTML(a, avail[a.id]));
+      });
+    });
 
     frenchSynopses(items.filter(function (a) { return a.description; }).map(function (a) { return a.id; })).then(function (fr) {
       Object.keys(fr).forEach(function (id) {
@@ -196,8 +253,6 @@ function setupHeroCarousel(hero, count) {
   show(0);
 }
 
-function viewsFr(n) { return Number(n).toLocaleString('fr-FR') + ' vue' + (n > 1 ? 's' : ''); }
-
 async function topTenItems() {
   var ranked = [];
   try {
@@ -208,7 +263,7 @@ async function topTenItems() {
       data.Page.media.forEach(function (m) { byId[m.id] = toAnime(m); });
       views.forEach(function (v) {
         var a = byId[v.id];
-        if (a && !a.isAdult) ranked.push(Object.assign({}, a, { views: Number(v.views) || 0 }));
+        if (a && !a.isAdult) ranked.push(a);
       });
     }
   } catch (e) {}
@@ -224,8 +279,7 @@ async function topTenItems() {
 }
 
 function topBadgeHTML(a, chipClass) {
-  if (a.views) return '<span class="' + chipClass + '">' + icon('eye') + viewsFr(a.views) + '</span>';
-  if (a.score) return '<span class="' + chipClass + '">' + icon('star', 'icon--fill') + scoreFr(a.score) + '<span class="sr-only"> sur 10</span></span>';
+  if (a.score) return '<span class="' + chipClass + '">' + scoreHTML(a.score) + '</span>';
   return '';
 }
 
@@ -286,8 +340,24 @@ function formatMinSec(sec) {
   return m + ':' + String(Math.floor(sec % 60)).padStart(2, '0');
 }
 
+// Saison 0 = épisodes spéciaux ; une entrée sans saison est en saison 1
+function continueSeason(item) {
+  var s = Number(item.season);
+  return Number.isInteger(s) && s >= 0 && item.season !== null && item.season !== '' ? s : 1;
+}
+
+// Entrées AniList : ?id= ; anciennes entrées MyAnimeList : ?mal= (le lecteur retrouve la fiche AniList)
 function continueHref(item) {
-  return 'lecteur.html?' + (item.src === 'anilist' ? 'id=' : 'mal=') + Number(item.id);
+  var ep = Number(item.episode);
+  return 'lecteur.html?' + (item.src === 'anilist' ? 'id=' : 'mal=') + Number(item.id) +
+    (Number.isInteger(ep) && ep >= 0 && item.episode !== null && item.episode !== '' ? '&season=' + continueSeason(item) + '&episode=' + ep : '');
+}
+
+function continueEpisodeLabel(item) {
+  var ep = Number(item.episode);
+  if (!Number.isInteger(ep) || item.episode === null || item.episode === '') return '';
+  var s = continueSeason(item);
+  return (s === 0 ? 'Épisode spécial ' + ep : 'Saison ' + s + ' · Épisode ' + ep);
 }
 
 function renderContinueWatching(user) {
@@ -298,18 +368,26 @@ function renderContinueWatching(user) {
   section.hidden = !items.length;
   if (!items.length) return;
   list.innerHTML = items.map(function (item) {
-    var pct = item.duration ? Math.min(100, Math.round((item.currentTime / item.duration) * 100)) : 0;
+    // Lecteur intégré (VOE, Vidmoly…) : position inconnue, on n'affiche que l'épisode
+    var embed = item.embed === true;
+    var current = Number(item.currentTime) || 0;
+    var duration = Number(item.duration) || 0;
+    var pct = !embed && duration ? Math.max(0, Math.min(100, Math.round((current / duration) * 100))) : 0;
     var img = safeImageUrl(item.image);
     var title = escapeHTML(item.title || 'Titre inconnu');
-    return '<li class="continue-item">' +
+    var episode = continueEpisodeLabel(item);
+    var detail = embed
+      ? (episode || 'Reprendre la lecture')
+      : (episode ? episode + ' · ' : '') + 'Reprise à ' + formatMinSec(current) + ' sur ' + formatMinSec(duration) + ' (' + pct + ' %)';
+    return '<li class="continue-item' + (embed ? ' continue-item--embed' : '') + '">' +
       '<div class="continue-thumb">' +
         (img ? '<img src="' + escapeHTML(img) + '" alt="" loading="lazy">' : '') +
         icon('play', 'icon--fill') +
-        '<span class="continue-progress" aria-hidden="true"><span style="width:' + pct + '%"></span></span>' +
+        (embed ? '' : '<span class="continue-progress" aria-hidden="true"><span style="width:' + pct + '%"></span></span>') +
       '</div>' +
       '<div class="continue-info">' +
-        '<div><h3><a href="' + continueHref(item) + '">' + title + '</a></h3>' +
-        '<p>Vidéo de démonstration · ' + formatMinSec(item.currentTime) + ' sur ' + formatMinSec(item.duration) + ' (' + pct + ' %)</p></div>' +
+        '<div><h3><a href="' + escapeHTML(continueHref(item)) + '">' + title + '</a></h3>' +
+        '<p>' + escapeHTML(detail) + '</p></div>' +
         '<button class="icon-btn" type="button" data-continue-remove="' + continueKey(item) + '" title="Retirer de la reprise">' + icon('x') + '<span class="sr-only">Retirer « ' + title + ' » de la reprise de lecture</span></button>' +
       '</div>' +
     '</li>';
@@ -478,6 +556,42 @@ function initSeasons() {
   render();
 }
 
+/* ---- Fiche anime : likes et vues ---- */
+function formatCount(n) { return Number(n || 0).toLocaleString('fr-FR'); }
+
+async function setupAnimeStats(root, a) {
+  if (typeof animeStats !== 'function') return;
+  var btn = root.querySelector('[data-like]');
+  var stats = await animeStats(a.id);
+  if (!stats.ok) return;
+  var chips = root.querySelector('[data-d-chips]');
+  chips.insertAdjacentHTML('beforeend', '<li class="chip" data-views-chip>' + icon('eye') + '<span>' + formatCount(stats.views) + ' vue' + (stats.views > 1 ? 's' : '') + '</span></li>');
+  function render() {
+    btn.setAttribute('aria-pressed', String(!!stats.liked));
+    btn.classList.toggle('is-liked', !!stats.liked);
+    btn.querySelector('[data-like-label]').textContent = stats.liked ? 'J\'aime déjà' : 'J\'aime';
+    btn.querySelector('[data-like-count]').textContent = formatCount(stats.likes);
+    btn.setAttribute('aria-label', (stats.liked ? 'Retirer mon j\'aime' : 'J\'aime') + ' — ' + formatCount(stats.likes) + ' j\'aime pour ' + a.title);
+  }
+  render();
+  btn.hidden = false;
+  var busy = false;
+  btn.addEventListener('click', async function () {
+    if (busy) return;
+    busy = true;
+    var before = { liked: stats.liked, likes: stats.likes };
+    stats.liked = !stats.liked;
+    stats.likes += stats.liked ? 1 : -1;
+    render();
+    var res = await toggleAnimeLike(a.id, stats.liked);
+    busy = false;
+    if (!res.ok) { stats.liked = before.liked; stats.likes = before.likes; render(); showToast(res.error, 'warning'); return; }
+    stats.liked = !!res.liked;
+    stats.likes = Number(res.likes) || 0;
+    render();
+  });
+}
+
 /* ---- Fiche anime ---- */
 function fuzzyDate(d) {
   if (!d || !d.year) return '';
@@ -506,12 +620,7 @@ async function loadAnimeDetails() {
     root.querySelector('[data-d-crumb]').textContent = a.title;
     root.querySelector('[data-d-eyebrow]').textContent = [typeFr(a.format), STATUS_FR[a.status]].filter(Boolean).join(' · ');
 
-    var alt = [];
-    if (a.titleRomaji && a.titleRomaji !== a.title) alt.push('<span lang="ja-Latn">' + escapeHTML(a.titleRomaji) + '</span>');
-    if (a.titleNative) alt.push('<span lang="ja">' + escapeHTML(a.titleNative) + '</span>');
-    var altEl = root.querySelector('[data-d-alt]');
-    altEl.innerHTML = alt.join(' · ');
-    altEl.hidden = !alt.length;
+    root.querySelector('[data-d-alt]').hidden = true;
 
     if (a.imageLarge) root.querySelector('[data-d-poster]').src = a.imageLarge;
     var backdrop = root.querySelector('[data-d-backdrop]');
@@ -521,14 +630,16 @@ async function loadAnimeDetails() {
     root.querySelector('[data-d-chips]').innerHTML = [
       a.season && a.year ? '<li class="chip">' + icon('calendar') + escapeHTML(SEASON_FR[a.season] + ' ' + a.year) + '</li>' : '',
       a.episodes ? '<li class="chip">' + icon('tv') + a.episodes + ' épisode' + (a.episodes > 1 ? 's' : '') + '</li>' : '',
-      a.score ? '<li class="chip chip--score">' + icon('star', 'icon--fill') + scoreFr(a.score) + '<span class="sr-only"> sur 10</span> <span class="muted">(AniList)</span></li>' : '',
+      a.score ? '<li class="chip chip--score">' + scoreHTML(a.score) + ' <span class="muted">(AniList)</span></li>' : '',
       next ? '<li class="chip">' + icon('clock') + 'Épisode ' + next.episode + ' le ' + escapeHTML(new Date(next.airingAt * 1000).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })) + '</li>' : ''
     ].join('');
 
     root.querySelector('[data-d-actions]').innerHTML =
-      listToggleButtonHTML('watchlist', listAnime(a), 'btn-primary') +
+      detailWatchHTML(a, null, 'loading') +
+      listToggleButtonHTML('watchlist', listAnime(a)) +
       listToggleButtonHTML('favorites', listAnime(a)) +
-      '<a class="btn btn-ghost" href="lecteur.html?id=' + Number(a.id) + '">' + icon('play', 'icon--fill') + '<span>Tester le lecteur (vidéo de démo)</span></a>';
+      '<button class="btn like-btn" type="button" data-like aria-pressed="false" hidden>' + icon('thumb-up') + '<span data-like-label>J\'aime</span><span class="like-count" data-like-count>0</span></button>';
+    setupAnimeStats(root, a);
 
     var synopsis = root.querySelector('[data-d-synopsis]');
     var langNote = root.querySelector('[data-d-lang-note]');
@@ -550,7 +661,7 @@ async function loadAnimeDetails() {
       ['Format', typeFr(a.format)],
       ['Durée', a.duration ? a.duration + ' min par épisode' : ''],
       ['Source', SOURCE_FR[m.source] || ''],
-      ['Note AniList', a.score ? scoreFr(a.score) + ' sur 10' : '']
+      ['Note AniList', a.score ? scoreFr(a.score) + '/100' : '']
     ].filter(function (f) { return f[1]; });
     root.querySelector('[data-d-facts]').innerHTML = facts.map(function (f) {
       return '<div><dt>' + escapeHTML(f[0]) + '</dt><dd>' + escapeHTML(f[1]) + '</dd></div>';
@@ -558,7 +669,7 @@ async function loadAnimeDetails() {
 
     renderTrailer(root, m.trailer, a.title);
     renderWatchLinks(root, m.externalLinks);
-    renderEpisodes(root, m, a);
+    setupWatchAvailability(root, m, a);
     refreshListButtons();
   } catch (err) {
     titleEl.textContent = 'Fiche indisponible';
@@ -602,9 +713,112 @@ function renderWatchLinks(root, links) {
   block.hidden = false;
 }
 
-function renderEpisodes(root, m, a) {
+// Bouton principal de la fiche. state : 'loading' (vérification en cours), 'error' (serveur muet) ou rien.
+// Jamais de lien tant que la disponibilité n'est pas confirmée.
+function detailWatchHTML(a, avail, state) {
+  if (avail) {
+    return '<a class="btn btn-primary" href="' + escapeHTML(watchHref(a, avail)) + '" data-d-watch>' + icon('play', 'icon--fill') + '<span>Regarder</span></a>';
+  }
+  if (state === 'loading') {
+    return '<button class="btn btn-soon" type="button" data-d-watch aria-disabled="true"><span class="btn-spinner" aria-hidden="true"></span><span>Recherche des épisodes…</span></button>';
+  }
+  if (state === 'error') {
+    return '<button class="btn btn-soon" type="button" data-d-watch aria-disabled="true">' + icon('alert') + '<span>Lecture indisponible</span>' +
+      '<span class="sr-only"> : la liste des épisodes n\'a pas pu être vérifiée, recharge la page pour réessayer</span></button>';
+  }
+  return '<button class="btn btn-soon" type="button" data-d-watch aria-disabled="true">' + icon('clock') + '<span>Bientôt disponible</span>' +
+    '<span class="sr-only"> : aucun épisode de « ' + escapeHTML(a.title) + ' » n\'est encore disponible sur LumaAnime</span></button>';
+}
+
+async function setupWatchAvailability(root, m, a) {
+  var item = null;
+  var seasons = null;
+  try {
+    var avail = await loadAvailability([a.id]);
+    item = avail ? avail[a.id] || null : null;
+    var slot = root.querySelector('[data-d-watch]');
+    if (slot) replaceKeepingFocus(slot, detailWatchHTML(a, item, avail ? '' : 'error'));
+
+    var langs = root.querySelector('[data-d-langs]');
+    if (langs && item && validLabels(item.labels).length) {
+      langs.innerHTML = '<span class="detail-langs-label" id="d-langs-label">Langues disponibles</span>' + langBadgesHTML(item.labels, 'd-langs-label', item.counts, item.total);
+      langs.hidden = false;
+    }
+
+    if (item && typeof publicEpisodeList === 'function') {
+      var res = await publicEpisodeList(item.root);
+      if (res && res.ok && Array.isArray(res.seasons) && res.seasons.length) seasons = res.seasons;
+    }
+  } catch (err) { seasons = null; }
+  renderEpisodes(root, m, a, seasons ? { seasons: seasons, avail: item } : null);
+}
+
+// Libellé d'un épisode : « Épisode 3 », « OVA 1 », « Spécial 2 »…
+function episodeName(e) {
+  return (EPISODE_KIND_FR[e.kind] || 'Épisode') + ' ' + Number(e.number);
+}
+
+function lumaEpisodeHTML(rootId, e) {
+  var n = Number(e.number);
+  var name = episodeName(e);
+  var kind = e.kind && e.kind !== 'episode' && EPISODE_KIND_FR[e.kind] ? EPISODE_KIND_FR[e.kind] : '';
+  var until = e.premium_until ? new Date(e.premium_until) : null;
+  var untilText = until && !isNaN(until.getTime()) ? until.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long' }) : '';
+  var lock = e.premium_until
+    ? '<span class="episode-lock"' + (untilText ? ' title="Accès anticipé Premium jusqu\'au ' + escapeHTML(untilText) + '"' : '') + '>' + icon('lock') +
+        '<span>Premium</span><span class="sr-only"> : accès anticipé' + (untilText ? ' jusqu\'au ' + escapeHTML(untilText) : '') + '</span></span>'
+    : '';
+  return '<li><a class="episode-link" href="' + escapeHTML(episodeHref(rootId, e.season, n)) + '">' +
+    '<span class="episode-num" aria-hidden="true">' + n + '</span>' +
+    '<span class="episode-title">' +
+      (e.title ? '<span class="sr-only">' + escapeHTML(name) + ' : </span>' + escapeHTML(e.title) : escapeHTML(name)) +
+      (e.title && kind ? ' <span class="episode-kind" aria-hidden="true">' + escapeHTML(kind) + '</span>' : '') +
+    '</span>' +
+    '<span class="episode-extra">' + langSpansHTML(e.labels) + lock + '</span>' +
+  '</a></li>';
+}
+
+// Liste LumaAnime : épisodes jouables, par saison (saison 0 = spéciaux)
+function renderLumaEpisodes(root, box, luma) {
+  var item = luma.avail;
+  var rootId = Number(item.root);
+  var only = item.season !== null && item.season !== undefined ? Number(item.season) : null;
+  var seasons = luma.seasons.filter(function (s) { return s && Array.isArray(s.episodes) && s.episodes.length; });
+  var shown = only === null ? seasons : seasons.filter(function (s) { return Number(s.number) === only; });
+  if (!shown.length) shown = seasons;
+  if (!shown.length) return false;
+  var headings = shown.length > 1 || Number(shown[0].number) !== 1;
+  box.innerHTML = shown.map(function (s) {
+    var num = Number(s.number);
+    var id = 'episodes-season-' + num;
+    var heading = (num === 0 ? 'Épisodes spéciaux' : 'Saison ' + num) + (s.title ? ' · ' + s.title : '');
+    var eps = s.episodes.filter(function (e) { return e && Number.isInteger(Number(e.number)); });
+    return '<div class="episode-season">' +
+      (headings ? '<h3 class="episode-season-title" id="' + id + '">' + escapeHTML(heading) + '</h3>' : '') +
+      '<ol class="episode-list episode-list--luma" aria-labelledby="' + (headings ? id : 'episodes-title') + '">' +
+        eps.map(function (e) { return lumaEpisodeHTML(rootId, e); }).join('') +
+      '</ol>' +
+    '</div>';
+  }).join('');
+  box.hidden = false;
+
+  var note = root.querySelector('[data-d-episodes-note]');
+  if (note && only !== null && seasons.length > shown.length) {
+    note.innerHTML = 'Cette fiche correspond à la saison ' + only + ' de la série. <a href="details.html?id=' + rootId + '">Voir toutes les saisons</a>';
+    note.hidden = false;
+  }
+  return true;
+}
+
+function renderEpisodes(root, m, a, luma) {
   var list = root.querySelector('[data-d-episodes]');
   var note = root.querySelector('[data-d-episodes-note]');
+  var box = root.querySelector('[data-d-luma-episodes]');
+  if (luma && box && renderLumaEpisodes(root, box, luma)) {
+    list.hidden = true;
+    list.innerHTML = '';
+    return;
+  }
   var eps = (m.streamingEpisodes || []).map(function (e) { return e.title; }).filter(Boolean);
   if (eps.length) {
     list.innerHTML = eps.slice(0, 60).map(function (t, i) {
@@ -641,7 +855,7 @@ async function loadPartnerDetails(root) {
     root.querySelector('[data-d-chips]').innerHTML = [
       item.year ? '<li class="chip">' + icon('calendar') + item.year + '</li>' : '',
       series && item.seasons ? '<li class="chip">' + icon('tv') + item.seasons + ' saison' + (item.seasons > 1 ? 's' : '') + '</li>' : '',
-      item.rating ? '<li class="chip chip--score">' + icon('star', 'icon--fill') + item.rating.toLocaleString('fr-FR') + '<span class="sr-only"> sur 10</span> <span class="muted">(TMDB)</span></li>' : ''
+      item.rating ? '<li class="chip chip--score">' + scoreHTML(item.rating * 10) + ' <span class="muted">(TMDB)</span></li>' : ''
     ].join('');
     root.querySelector('[data-d-actions]').innerHTML = '<a class="btn" href="catalogue.html">' + icon('arrow-left') + '<span>Retour au catalogue</span></a>';
     var synopsis = root.querySelector('[data-d-synopsis]');
@@ -652,7 +866,7 @@ async function loadPartnerDetails(root) {
       ['Type', series ? 'Série' : 'Film'],
       ['Année', item.year],
       ['Genres', item.genres.join(', ')],
-      ['Note TMDB', item.rating ? item.rating.toLocaleString('fr-FR') + ' sur 10' : ''],
+      ['Note TMDB', item.rating ? Math.round(item.rating * 10) + '/100' : ''],
       ['Saisons', series ? item.seasons : ''],
       ['Épisodes', series ? item.episodes : '']
     ].filter(function (f) { return f[1]; }).map(function (f) {
@@ -673,27 +887,87 @@ function showDetailsProblem(root, message) {
 }
 
 
-/* ---- Accueil : images des genres (seulement celles présentes sur le serveur) ---- */
-async function loadGenreBanners() {
+/* ---- Accueil : images des genres (bannière AniList de l'anime le plus populaire du genre) ---- */
+function loadGenreBanners() {
   var tiles = document.querySelectorAll('.genre-tile');
-  if (!tiles.length) return;
-  var list = cacheGet('genre_banners', 10 * 60 * 1000);
-  if (!list) {
-    try {
-      var res = await fetch('/api/genres', { headers: { Accept: 'application/json' } });
-      if (!res.ok) return;
-      list = (await res.json()).banners || [];
-      cacheSet('genre_banners', list);
-    } catch (e) { return; }
-  }
-  tiles.forEach(function (tile) {
-    var match = tile.className.match(/genre-tile--([a-z-]+)/);
-    if (!match || list.indexOf(match[1]) === -1) return;
-    tile.style.setProperty('--img', 'url("' + new URL('assets/' + match[1] + '-banner.png', location.href).href + '")');
+  if (tiles.length) loadGenreFallbacks(Array.prototype.slice.call(tiles));
+}
+
+async function loadGenreFallbacks(tiles) {
+  var defs = [], vars = [], fields = [], variables = {};
+  tiles.forEach(function (tile, i) {
+    var params = new URL(tile.getAttribute('href'), location.href).searchParams;
+    var genre = params.get('genre'), tag = params.get('tag');
+    if (!genre && !tag) return;
+    vars.push('$v' + i + ': String');
+    variables['v' + i] = genre || tag;
+    fields.push('g' + i + ': Page(perPage: 8) { media(type: ANIME, isAdult: false, sort: POPULARITY_DESC, ' + (genre ? 'genre' : 'tag') + ': $v' + i + ') { id bannerImage } }');
+    defs.push(i);
   });
+  if (!fields.length) return;
+  try {
+    var data = await anilist('query (' + vars.join(', ') + ') { ' + fields.join(' ') + ' }', variables);
+    var used = {};
+    defs.forEach(function (i) {
+      var media = (data['g' + i] && data['g' + i].media) || [];
+      var pick = media.filter(function (m) { return safeImageUrl(m.bannerImage) && !used[m.id]; })[0];
+      if (!pick) return;
+      used[pick.id] = true;
+      tiles[i].style.setProperty('--img', 'url("' + safeImageUrl(pick.bannerImage) + '")');
+    });
+  } catch (e) {}
+}
+
+/* ---- Accueil : Coup de cœur (choisi dans le panel admin) ---- */
+var FEATURED_ANCHORS = { after_hero: '[data-hero]', after_top: '[data-home-top]', after_season: '[data-home-season]', after_genres: '[data-home-genres]' };
+
+async function loadFeatured() {
+  var section = document.querySelector('[data-featured]');
+  if (!section || typeof loadSiteSettings !== 'function') return;
+  var cfg = ((await loadSiteSettings()) || {}).featured;
+  if (!cfg || !cfg.enabled || !Number(cfg.anilist_id)) { section.hidden = true; return; }
+  var anchor = document.querySelector(FEATURED_ANCHORS[cfg.position] || FEATURED_ANCHORS.after_top);
+  if (anchor && anchor.nextElementSibling !== section) anchor.parentNode.insertBefore(section, anchor.nextElementSibling);
+  var a = null;
+  try { var m = await fetchAnimeDetails(new URLSearchParams('id=' + Number(cfg.anilist_id))); a = m && toAnime(m); } catch (e) { a = null; }
+  if (!a || a.isAdult) { section.hidden = true; return; }
+
+  var image = safeImageUrl(cfg.image) || a.imageLarge;
+  var link = String(cfg.button_link || '');
+  var href = /^https?:\/\/[^\s"<>]+$/i.test(link) || /^[a-z0-9-]+\.html([?#][^\s"<>]*)?$/i.test(link) ? link : detailsHref(a);
+  var external = /^https?:\/\//i.test(href) && href.indexOf(location.origin) !== 0;
+  var title = cfg.title || a.title;
+  section.innerHTML =
+    '<div class="wrap">' +
+      '<div class="featured">' +
+        '<div class="duotone" aria-hidden="true">' + (a.banner || a.imageLarge ? '<img src="' + escapeHTML(a.banner || a.imageLarge) + '" alt="" loading="lazy">' : '') + '</div>' +
+        '<div class="featured-poster"><div class="poster-frame"><img src="' + escapeHTML(image) + '" alt="" loading="lazy" width="300" height="424"></div></div>' +
+        '<div class="featured-copy">' +
+          '<p class="eyebrow featured-eyebrow">' + icon('heart', 'icon--fill') + "Coup de cœur de l'équipe</p>" +
+          '<h2 class="section-title featured-title" id="featured-title">' + escapeHTML(title) + '</h2>' +
+          (cfg.title && cfg.title !== a.title ? '<p class="featured-anime"><a href="' + detailsHref(a) + '">' + escapeHTML(a.title) + '</a></p>' : '') +
+          '<ul class="chip-list">' +
+            (a.format ? '<li class="chip">' + escapeHTML(typeFr(a.format)) + '</li>' : '') +
+            (a.year ? '<li class="chip">' + Number(a.year) + '</li>' : '') +
+            (a.score ? '<li class="chip chip--score">' + scoreHTML(a.score) + '</li>' : '') +
+          '</ul>' +
+          '<p class="featured-desc" data-featured-desc' + (cfg.description ? '' : ' lang="en"') + '>' + escapeHTML(cfg.description || truncate(a.description || '', 420)) + '</p>' +
+          '<div class="hero-actions">' +
+            '<a class="btn btn-primary btn-lg" href="' + escapeHTML(href) + '"' + (external ? ' target="_blank" rel="noopener"' : '') + '>' + escapeHTML(cfg.button_label || 'Découvrir la fiche') + icon('arrow-right') + '</a>' +
+            listToggleIconHTML('watchlist', listAnime(a)) +
+          '</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  section.hidden = false;
+  refreshListButtons();
+  if (!cfg.description && a.description) {
+    applyFrenchSynopsis(section.querySelector('[data-featured-desc]'), a.id, a.description, 420);
+  }
 }
 
 document.addEventListener('DOMContentLoaded', function () {
+  loadFeatured();
   loadGenreBanners();
   loadHero();
   loadTop10();

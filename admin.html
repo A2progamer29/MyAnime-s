@@ -7,9 +7,9 @@
 <meta name="description" content="Administration de LumaAnime.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0D0D13">
-<link rel="icon" href="assets/logos/favicon-64.png" type="image/png">
+<link rel="icon" href="assets/logos/logo.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
-<link rel="stylesheet" href="css/admin.css?v=20260926o">
+<link rel="stylesheet" href="css/admin.css?v=20261007b">
 </head>
 <body class="adm">
 <a class="adm-skip" href="#adm-main">Aller au contenu</a>
@@ -19,6 +19,12 @@
     <nav>
       <a href="#tableau" data-nav="tableau">Tableau de bord</a>
       <a href="#stats" data-nav="stats">Statistiques</a>
+      <a href="#episodes" data-nav="episodes">Épisodes</a>
+      <a href="#wishboard" data-nav="wishboard">Wishboard <span class="adm-badge" data-wish-pending hidden></span></a>
+      <a href="#site" data-nav="site">Bandeau &amp; Coup de cœur</a>
+      <a href="#coins" data-nav="coins">Coins &amp; abonnements</a>
+      <a href="#decorations" data-nav="decorations">Décorations</a>
+      <a href="#succes" data-nav="succes">Succès &amp; badges</a>
       <a href="#membres" data-nav="membres">Membres</a>
       <a href="#cles" data-nav="cles">Clés</a>
       <a href="#commandes" data-nav="commandes">Commandes</a>
@@ -53,12 +59,313 @@
           <ol class="adm-days" data-days></ol>
         </section>
       </div>
+      <div class="adm-head adm-head--sub"><h2>En ligne maintenant <span class="adm-live" aria-hidden="true"></span></h2><span class="adm-muted" data-online-count role="status"></span></div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <caption class="adm-sr">Visiteurs ayant une page ouverte depuis moins de 2 minutes</caption>
+          <thead><tr><th scope="col">Visiteur</th><th scope="col">Page</th><th scope="col">Titre consulté</th><th scope="col" class="adm-num">Dernière activité</th></tr></thead>
+          <tbody data-online></tbody>
+        </table>
+      </div>
       <div class="adm-head adm-head--sub"><h2>Vues par titre</h2><input class="adm-input" type="search" placeholder="Rechercher un titre" aria-label="Rechercher un titre" data-titles-search></div>
       <div class="adm-table-wrap">
         <table class="adm-table">
           <caption class="adm-sr">Nombre de vues de chaque titre (une vue par visiteur et par jour)</caption>
           <thead><tr><th scope="col">#</th><th scope="col">Titre</th><th scope="col" class="adm-num">Aujourd'hui</th><th scope="col" class="adm-num">7 jours</th><th scope="col" class="adm-num">Total</th></tr></thead>
           <tbody data-titles></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="adm-view" data-view="episodes" hidden aria-labelledby="t-episodes">
+      <header class="adm-head">
+        <h1 id="t-episodes">Épisodes</h1>
+        <div class="adm-seg" role="group" aria-label="Sections des épisodes">
+          <button class="adm-seg-btn" type="button" data-ep-tab="list" aria-pressed="true">Animes</button>
+          <button class="adm-seg-btn" type="button" data-ep-tab="providers" aria-pressed="false">Lecteurs</button>
+          <button class="adm-seg-btn" type="button" data-ep-tab="languages" aria-pressed="false">Langues</button>
+        </div>
+      </header>
+      <p class="adm-muted adm-intro">Les vidéos restent hébergées chez les lecteurs (VOE, Vidmoly…) : ici, tu colles le lien de chaque épisode et tu indiques sa langue. LumaAnime ne télécharge rien, il intègre seulement le lecteur. Une source n'apparaît sur le site que si elle est prête, publiée et que sa langue est vérifiée.</p>
+
+      <div data-ep-pane="list">
+        <section class="adm-card" aria-labelledby="sync-title">
+          <div class="adm-head adm-head--card">
+            <h2 id="sync-title">Synchronisation AniList</h2>
+            <div class="adm-actions adm-actions--tight">
+              <button class="adm-btn adm-btn--primary" type="button" data-sync-run>Synchroniser maintenant</button>
+              <button class="adm-btn" type="button" data-sync-cancel hidden>Annuler</button>
+            </div>
+          </div>
+          <p class="adm-muted">La synchro passe par ton navigateur (AniList refuse les serveurs) : garde cet onglet ouvert pendant qu'elle tourne. Elle se relance seule, discrètement, quand la dernière date de plus de 6 heures.</p>
+          <p class="adm-sync-state" data-sync-state role="status" aria-live="polite"></p>
+          <progress class="adm-progress" data-sync-progress max="1" value="0" hidden aria-label="Progression de la synchronisation"></progress>
+          <label class="adm-check"><input type="checkbox" data-sync-create checked> Créer les nouveaux épisodes diffusés (sans source, ils restent invisibles du public)</label>
+        </section>
+
+        <section class="adm-card" aria-labelledby="ep-add-title">
+          <h2 id="ep-add-title">Ajouter un anime</h2>
+          <form class="adm-toolbar" data-ep-add novalidate>
+            <label class="adm-field adm-grow"><span>Rechercher sur AniList</span><input class="adm-input" name="q" type="search" placeholder="Nom de l'anime (anglais, romaji ou japonais)" autocomplete="off" maxlength="100"></label>
+            <button class="adm-btn" type="submit">Rechercher</button>
+          </form>
+          <label class="adm-check"><input type="checkbox" data-ep-add-create checked> Créer les épisodes déjà diffusés</label>
+          <ul class="adm-ep-results" data-ep-add-results aria-live="polite"></ul>
+        </section>
+
+        <div class="adm-alert" data-ep-review-alert hidden role="note"></div>
+
+        <div class="adm-toolbar">
+          <label class="adm-field adm-grow"><span>Rechercher dans les animes du site</span><input class="adm-input" type="search" data-ep-search placeholder="Titre ou numéro AniList" autocomplete="off" maxlength="100"></label>
+          <div class="adm-seg" role="group" aria-label="Filtrer les animes" data-ep-filters>
+            <button class="adm-seg-btn" type="button" data-ep-filter="all" aria-pressed="true">Tous</button>
+            <button class="adm-seg-btn" type="button" data-ep-filter="review" aria-pressed="false">À vérifier</button>
+            <button class="adm-seg-btn" type="button" data-ep-filter="failed" aria-pressed="false">En échec</button>
+            <button class="adm-seg-btn" type="button" data-ep-filter="reports" aria-pressed="false">Signalés</button>
+            <button class="adm-seg-btn" type="button" data-ep-filter="missing" aria-pressed="false">Épisodes sans source</button>
+          </div>
+        </div>
+        <p class="adm-muted adm-count" data-ep-total role="status"></p>
+        <ul class="adm-anime-list" data-ep-animes></ul>
+        <div class="adm-actions adm-actions--center"><button class="adm-btn" type="button" data-ep-more hidden>Afficher plus</button></div>
+      </div>
+
+      <div data-ep-pane="anime" hidden>
+        <div class="adm-actions adm-actions--top"><button class="adm-btn adm-btn--sm" type="button" data-ep-back>← Retour à la liste des animes</button></div>
+        <div data-ep-tree tabindex="-1"></div>
+      </div>
+
+      <div data-ep-pane="providers" hidden>
+        <p class="adm-muted adm-intro">Un lecteur est un site qui héberge les vidéos (VOE, Vidmoly…). Seuls les liens vers ses domaines autorisés sont acceptés. Le lecteur le plus prioritaire est proposé en premier aux visiteurs. Après l'ajout d'un nouveau lecteur, son domaine doit aussi être ajouté à la ligne <code>frame-src</code> du fichier <code>_headers</code> du site (politique de sécurité), puis le site redéployé.</p>
+        <div data-prov-list></div>
+        <form class="adm-card adm-form adm-prov-card" data-prov-new novalidate>
+          <h2>Ajouter un lecteur</h2>
+          <p class="adm-muted">Exemple : « Kani », dès que son domaine d'intégration est connu (ex. kani.example). La clé ne peut plus changer ensuite.</p>
+          <div data-prov-new-fields></div>
+          <p class="adm-error" data-prov-new-error role="alert"></p>
+          <div class="adm-actions"><button class="adm-btn adm-btn--primary" type="submit">Ajouter le lecteur</button></div>
+        </form>
+      </div>
+
+      <div data-ep-pane="languages" hidden>
+        <p class="adm-muted adm-intro">Chaque source a une langue structurée (audio d'origine ou doublage, sous-titres). Le libellé affiché (VOSTFR, VF…) est calculé par le serveur avec les règles ci-dessous : la règle la plus précise l'emporte, et une modification s'applique partout immédiatement.</p>
+        <div data-lang-config></div>
+      </div>
+    </section>
+    <section class="adm-view" data-view="wishboard" hidden aria-labelledby="t-wishboard">
+      <header class="adm-head"><h1 id="t-wishboard">Wishboard</h1><button class="adm-btn" type="button" data-wish-refresh>Actualiser</button></header>
+      <p class="adm-muted adm-intro">Les propositions des visiteurs, de la plus votée à la moins votée. Les animes acceptés restent affichés sur le Wishboard public (votes fermés) ; les autres décisions les retirent de la page publique.</p>
+      <div class="adm-toolbar">
+        <label class="adm-field adm-grow"><span>Rechercher</span><input class="adm-input" type="search" data-wish-search placeholder="Titre de l'anime" autocomplete="off" maxlength="100"></label>
+        <label class="adm-field"><span>Statut</span>
+          <select class="adm-input" data-wish-filter>
+            <option value="all">Tous</option>
+            <option value="pending" selected>En attente</option>
+            <option value="accepted">Acceptés</option>
+            <option value="not_found">Non trouvés</option>
+            <option value="refused">Refusés</option>
+            <option value="too_recent">Trop récents</option>
+          </select>
+        </label>
+      </div>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <caption class="adm-sr">Propositions du Wishboard</caption>
+          <thead><tr><th scope="col">Anime</th><th scope="col" class="adm-num">Votes</th><th scope="col">Statut</th><th scope="col">Proposé</th><th scope="col">Décision</th></tr></thead>
+          <tbody data-wishes></tbody>
+        </table>
+      </div>
+    </section>
+    <section class="adm-view" data-view="site" hidden aria-labelledby="t-site">
+      <header class="adm-head"><h1 id="t-site">Bandeau &amp; Coup de cœur</h1></header>
+      <form class="adm-card adm-form" data-banner-form novalidate>
+        <h2>Bandeau au-dessus du header</h2>
+        <p class="adm-muted adm-intro">Affiché sur toutes les pages du site (sauf l'administration). Laisse le lien vide pour un bandeau sans lien.</p>
+        <label class="adm-check"><input type="checkbox" name="enabled"> Afficher le bandeau</label>
+        <div class="adm-row">
+          <label class="adm-field adm-grow"><span>Texte (200 caractères max.)</span><input class="adm-input" name="text" type="text" maxlength="200" placeholder="Nouveau : le Wishboard est ouvert !"></label>
+        </div>
+        <div class="adm-row">
+          <label class="adm-field adm-grow"><span>Lien (facultatif : https://… ou page du site, ex. wishboard.html)</span><input class="adm-input" name="link" type="text" maxlength="500" placeholder="wishboard.html"></label>
+          <label class="adm-check adm-check--inline"><input type="checkbox" name="new_tab"> Ouvrir dans un nouvel onglet</label>
+        </div>
+        <div class="adm-row">
+          <label class="adm-field adm-field--xs"><span>Couleur du texte</span><input class="adm-input adm-color" name="color" type="color" value="#0d0d13"></label>
+          <label class="adm-field adm-field--xs"><span>Couleur du fond</span><input class="adm-input adm-color" name="background" type="color" value="#ff4d6d"></label>
+          <label class="adm-field"><span>Animation</span>
+            <select class="adm-input" name="animation">
+              <option value="none">Aucune</option><option value="fade">Apparition</option><option value="slide">Glissement</option>
+              <option value="marquee">Défilement</option><option value="pulse">Pulsation légère</option>
+            </select>
+          </label>
+        </div>
+        <p class="adm-muted">Aperçu (les animations sont désactivées pour les visiteurs qui demandent moins d'animations à leur système) :</p>
+        <div class="adm-banner-preview" data-banner-preview></div>
+        <p class="adm-error" data-banner-error role="alert"></p>
+        <div class="adm-actions"><button class="adm-btn adm-btn--primary" type="submit">Enregistrer le bandeau</button></div>
+      </form>
+
+      <form class="adm-card adm-form" data-featured-form novalidate>
+        <h2>Coup de cœur de l'accueil</h2>
+        <p class="adm-muted adm-intro">Choisis un anime : l'image, le titre et le résumé viennent d'AniList. Tous les autres champs sont facultatifs.</p>
+        <label class="adm-check"><input type="checkbox" name="enabled"> Afficher le Coup de cœur sur l'accueil</label>
+        <div class="adm-toolbar">
+          <label class="adm-field adm-grow"><span>Rechercher l'anime sur AniList</span><input class="adm-input" name="q" type="search" autocomplete="off" maxlength="100" placeholder="Nom de l'anime"></label>
+          <button class="adm-btn" type="button" data-featured-search>Rechercher</button>
+        </div>
+        <ul class="adm-ep-results" data-featured-results></ul>
+        <div class="adm-ep-picked" data-featured-picked hidden></div>
+        <div class="adm-row">
+          <label class="adm-field adm-grow"><span>Titre affiché (vide = titre de l'anime)</span><input class="adm-input" name="title" type="text" maxlength="120"></label>
+          <label class="adm-field"><span>Position sur l'accueil</span>
+            <select class="adm-input" name="position">
+              <option value="after_hero">Sous le carrousel</option><option value="after_top">Après le Top 10</option>
+              <option value="after_season">Après la saison en cours</option><option value="after_genres">Après les genres</option>
+            </select>
+          </label>
+        </div>
+        <label class="adm-field"><span>Description (vide = résumé AniList traduit)</span><textarea class="adm-input adm-textarea" name="description" maxlength="800" rows="4"></textarea></label>
+        <div class="adm-row">
+          <label class="adm-field"><span>Texte du bouton</span><input class="adm-input" name="button_label" type="text" maxlength="40" placeholder="Découvrir la fiche"></label>
+          <label class="adm-field adm-grow"><span>Lien du bouton (vide = fiche de l'anime)</span><input class="adm-input" name="button_link" type="text" maxlength="500" placeholder="lecteur.html?id=…"></label>
+        </div>
+        <div class="adm-row">
+          <label class="adm-field adm-grow"><span>Image (vide = affiche AniList)</span><input class="adm-input" name="image" type="url" maxlength="500" placeholder="https://…"></label>
+          <label class="adm-btn adm-upload">Envoyer une image<input type="file" accept="image/png,image/jpeg,image/webp,image/gif" data-upload="featured" data-upload-target="image" hidden></label>
+        </div>
+        <p class="adm-error" data-featured-error role="alert"></p>
+        <div class="adm-actions"><button class="adm-btn adm-btn--primary" type="submit">Enregistrer le Coup de cœur</button><a class="adm-btn" href="index.html" target="_blank" rel="noopener">Voir l'accueil</a></div>
+      </form>
+    </section>
+
+    <section class="adm-view" data-view="coins" hidden aria-labelledby="t-coins">
+      <header class="adm-head"><h1 id="t-coins">Coins &amp; abonnements</h1></header>
+      <form class="adm-card adm-form" data-tiers-form novalidate>
+        <h2>Soutien avec les Anime Coins</h2>
+        <p class="adm-muted adm-intro">Les membres échangent leurs coins contre 30, 60 ou 90 jours de Soutien, ajoutés à la fin de leur Premium en cours. Le Premium à vie n'est jamais échangeable contre des coins. Repère : une série parfaite rapporte environ 1 150 à 1 250 AC par mois.</p>
+        <div class="adm-row">
+          <label class="adm-field"><span>30 jours (AC)</span><input class="adm-input" name="t30" type="number" min="100" max="1000000" step="10" required></label>
+          <label class="adm-field"><span>60 jours (AC)</span><input class="adm-input" name="t60" type="number" min="100" max="1000000" step="10" required></label>
+          <label class="adm-field"><span>90 jours (AC)</span><input class="adm-input" name="t90" type="number" min="100" max="1000000" step="10" required></label>
+        </div>
+        <p class="adm-error" data-tiers-error role="alert"></p>
+        <div class="adm-actions"><button class="adm-btn adm-btn--primary" type="submit">Enregistrer les prix</button></div>
+      </form>
+      <form class="adm-card adm-form" data-rate-form novalidate>
+        <h2>Prix des décorations en Anime Coins</h2>
+        <p class="adm-muted adm-intro">Chaque décoration a un niveau de prix de 0 à 3 € (par 0,50 €). Il est converti en Anime Coins avec ce taux (par défaut 385 AC pour 1 €, soit le rapport Soutien 3,90 € = 1 500 AC). Les coins n'ont aucune valeur monétaire : aucun paiement réel n'est demandé.</p>
+        <div class="adm-row">
+          <label class="adm-field"><span>Anime Coins pour 1 €</span><input class="adm-input" name="rate" type="number" min="10" max="100000" step="1" required></label>
+        </div>
+        <table class="adm-table adm-table--compact"><caption class="adm-sr">Conversion des niveaux de prix</caption><thead><tr><th scope="col">Niveau</th><th scope="col" class="adm-num">Prix en AC</th></tr></thead><tbody data-rate-table></tbody></table>
+        <p class="adm-error" data-rate-error role="alert"></p>
+        <div class="adm-actions"><button class="adm-btn adm-btn--primary" type="submit">Enregistrer le taux</button></div>
+      </form>
+    </section>
+
+    <section class="adm-view" data-view="decorations" hidden aria-labelledby="t-decorations">
+      <header class="adm-head"><h1 id="t-decorations">Décorations</h1><span class="adm-muted" data-deco-count role="status"></span></header>
+      <form class="adm-card adm-form" data-deco-form novalidate>
+        <h2 data-deco-form-title>Nouvelle décoration</h2>
+        <p class="adm-muted adm-intro">Utilise une image transparente (PNG ou WebP). Pour un cadre, garde le centre vide afin de ne pas cacher la photo ; pour un coin ou le dessus de l'avatar, une petite image suffit ; pour la bannière, prévois un format large (3:1) ou un petit motif pour les coins.</p>
+        <div class="adm-row">
+          <label class="adm-field adm-grow"><span>Nom</span><input class="adm-input" name="name" type="text" maxlength="60" required></label>
+          <label class="adm-field"><span>Catégorie</span><select class="adm-input" name="category" data-deco-categories></select></label>
+          <label class="adm-field adm-field--xs"><span>Prix</span><select class="adm-input" name="price_cents"><option value="0">Gratuit</option><option value="50">0,50 €</option><option value="100">1,00 €</option><option value="150">1,50 €</option><option value="200">2,00 €</option><option value="250">2,50 €</option><option value="300">3,00 €</option></select></label>
+          <label class="adm-field adm-field--xs"><span>Ordre</span><input class="adm-input" name="sort" type="number" min="-1000" max="1000" value="0"></label>
+        </div>
+        <label class="adm-field"><span>Description</span><input class="adm-input" name="description" type="text" maxlength="300"></label>
+        <div class="adm-row adm-row--center">
+          <label class="adm-field adm-grow"><span>Image (https://…)</span><input class="adm-input" name="image_url" type="url" maxlength="500" required></label>
+          <label class="adm-btn adm-upload">Envoyer une image<input type="file" accept="image/png,image/webp,image/gif,image/jpeg" data-upload="decorations" data-upload-target="image_url" hidden></label>
+        </div>
+        <div class="adm-row adm-row--center">
+          <label class="adm-field adm-grow"><span>Emplacement sur le profil</span><select class="adm-input" name="placement" data-deco-placements></select></label>
+          <div class="adm-deco-preview" data-deco-preview aria-hidden="true"></div>
+        </div>
+        <p class="adm-muted" data-deco-placement-hint></p>
+        <label class="adm-check"><input type="checkbox" name="active" checked> Disponible dans la boutique</label>
+        <p class="adm-error" data-deco-error role="alert"></p>
+        <div class="adm-actions"><button class="adm-btn" type="button" data-deco-cancel hidden>Annuler la modification</button><button class="adm-btn adm-btn--primary" type="submit" data-deco-submit>Créer la décoration</button></div>
+      </form>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <caption class="adm-sr">Décorations</caption>
+          <thead><tr><th scope="col">Décoration</th><th scope="col">Prix</th><th scope="col">Statut</th><th scope="col" class="adm-num">Membres</th><th scope="col"><span class="adm-sr">Actions</span></th></tr></thead>
+          <tbody data-deco-rows></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="adm-view" data-view="succes" hidden aria-labelledby="t-succes">
+      <header class="adm-head"><h1 id="t-succes">Succès &amp; badges</h1><button class="adm-btn adm-btn--primary" type="button" data-ach-new>Nouveau succès à paliers</button></header>
+      <p class="adm-muted adm-intro">Les 42 succès classiques restent gérés comme avant. Ici, tu crées des succès à paliers : chaque palier a son objectif, sa récompense en Anime Coins, et éventuellement un badge ou une décoration. Les membres atteignent les paliers automatiquement en ouvrant la page Anime Coins.</p>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <caption class="adm-sr">Succès à paliers</caption>
+          <thead><tr><th scope="col">Ordre</th><th scope="col">Succès</th><th scope="col">Statistique</th><th scope="col" class="adm-num">Paliers</th><th scope="col" class="adm-num">Joueurs</th><th scope="col">Statut</th><th scope="col"><span class="adm-sr">Actions</span></th></tr></thead>
+          <tbody data-ach-rows></tbody>
+        </table>
+      </div>
+
+      <form class="adm-card adm-form adm-ach-editor" data-ach-form hidden novalidate>
+        <h2 data-ach-form-title>Nouveau succès</h2>
+        <div class="adm-row">
+          <label class="adm-field adm-grow"><span>Nom</span><input class="adm-input" name="name" type="text" maxlength="60" required></label>
+          <label class="adm-field"><span>Icône</span><select class="adm-input" name="icon"><option value="trophy">trophy</option><option value="heart">heart</option><option value="star">star</option><option value="flame">flame</option><option value="crown">crown</option><option value="coin">coin</option><option value="gift">gift</option><option value="bookmark">bookmark</option><option value="calendar">calendar</option><option value="clock">clock</option><option value="eye">eye</option><option value="sparkle">sparkle</option><option value="arrow-up">arrow-up</option><option value="tv">tv</option><option value="play">play</option><option value="user">user</option><option value="shield">shield</option><option value="key">key</option><option value="flag">flag</option><option value="check">check</option><option value="list">list</option><option value="grid">grid</option><option value="broadcast">broadcast</option><option value="palette">palette</option></select></label>
+          <label class="adm-field"><span>Catégorie</span><input class="adm-input" name="category" type="text" maxlength="30" value="progression" pattern="[a-z0-9_-]+"></label>
+        </div>
+        <label class="adm-field"><span>Description</span><input class="adm-input" name="description" type="text" maxlength="300"></label>
+        <div class="adm-row">
+          <label class="adm-field adm-grow"><span>Statistique mesurée</span><select class="adm-input" name="metric" data-metric-select></select></label>
+          <label class="adm-field"><span>Unité affichée</span><input class="adm-input" name="unit" type="text" maxlength="30" placeholder="favoris"></label>
+          <label class="adm-check adm-check--inline"><input type="checkbox" name="active" checked> Actif</label>
+        </div>
+        <fieldset class="adm-fieldset">
+          <legend>Générer les paliers</legend>
+          <div class="adm-row">
+            <label class="adm-field adm-field--xs"><span>Nombre</span><input class="adm-input" name="gen_count" type="number" min="1" max="200" value="10"></label>
+            <label class="adm-field adm-field--xs"><span>1er objectif</span><input class="adm-input" name="gen_first" type="number" min="1" value="1"></label>
+            <label class="adm-field adm-field--xs"><span>Dernier objectif</span><input class="adm-input" name="gen_last" type="number" min="2" value="1000"></label>
+            <label class="adm-field adm-field--xs"><span>AC au 1er palier</span><input class="adm-input" name="gen_reward" type="number" min="0" value="5"></label>
+            <button class="adm-btn" type="button" data-tiers-generate>Générer</button>
+          </div>
+          <p class="adm-muted">La génération remplace la liste ci-dessous par une progression de plus en plus difficile. Tu peux ensuite modifier chaque palier.</p>
+        </fieldset>
+        <div class="adm-table-wrap adm-tiers-wrap">
+          <table class="adm-table adm-table--compact">
+            <caption class="adm-sr">Paliers du succès</caption>
+            <thead><tr><th scope="col">Palier</th><th scope="col">Objectif</th><th scope="col">Récompense (AC)</th><th scope="col">Badge</th><th scope="col">Décoration</th><th scope="col"><span class="adm-sr">Retirer</span></th></tr></thead>
+            <tbody data-tier-rows></tbody>
+          </table>
+        </div>
+        <div class="adm-actions"><button class="adm-btn" type="button" data-tier-add>Ajouter un palier</button></div>
+        <p class="adm-error" data-ach-error role="alert"></p>
+        <div class="adm-actions"><button class="adm-btn" type="button" data-ach-cancel>Fermer</button><button class="adm-btn adm-btn--primary" type="submit">Enregistrer le succès</button></div>
+      </form>
+
+      <div class="adm-head adm-head--sub"><h2>Badges</h2></div>
+      <form class="adm-card adm-form" data-badge-form novalidate>
+        <h2 data-badge-form-title>Nouveau badge</h2>
+        <div class="adm-row adm-row--center">
+          <label class="adm-field adm-grow"><span>Nom</span><input class="adm-input" name="name" type="text" maxlength="60" required></label>
+          <label class="adm-field"><span>Icône</span><select class="adm-input" name="icon"><option value="trophy">trophy</option><option value="heart">heart</option><option value="star">star</option><option value="flame">flame</option><option value="crown">crown</option><option value="coin">coin</option><option value="gift">gift</option><option value="bookmark">bookmark</option><option value="calendar">calendar</option><option value="clock">clock</option><option value="eye">eye</option><option value="sparkle">sparkle</option><option value="arrow-up">arrow-up</option><option value="tv">tv</option><option value="play">play</option><option value="user">user</option><option value="shield">shield</option><option value="key">key</option><option value="flag">flag</option><option value="check">check</option><option value="list">list</option><option value="grid">grid</option><option value="broadcast">broadcast</option><option value="palette">palette</option></select></label>
+          <label class="adm-field adm-field--xs"><span>Couleur</span><input class="adm-input adm-color" name="color" type="color" value="#ff4d6d"></label>
+          <span class="adm-badge-preview" data-badge-preview></span>
+        </div>
+        <label class="adm-field"><span>Description</span><input class="adm-input" name="description" type="text" maxlength="300"></label>
+        <div class="adm-row">
+          <label class="adm-field adm-grow"><span>Image (facultative, remplace l'icône)</span><input class="adm-input" name="image_url" type="url" maxlength="500" placeholder="https://…"></label>
+          <label class="adm-btn adm-upload">Envoyer une image<input type="file" accept="image/png,image/webp,image/gif,image/jpeg" data-upload="badges" data-upload-target="image_url" hidden></label>
+        </div>
+        <label class="adm-check"><input type="checkbox" name="active" checked> Actif</label>
+        <p class="adm-error" data-badge-error role="alert"></p>
+        <div class="adm-actions"><button class="adm-btn" type="button" data-badge-cancel hidden>Annuler la modification</button><button class="adm-btn adm-btn--primary" type="submit" data-badge-submit>Créer le badge</button></div>
+      </form>
+      <div class="adm-table-wrap">
+        <table class="adm-table">
+          <caption class="adm-sr">Badges</caption>
+          <thead><tr><th scope="col">Badge</th><th scope="col">Description</th><th scope="col" class="adm-num">Paliers liés</th><th scope="col" class="adm-num">Membres</th><th scope="col">Statut</th><th scope="col"><span class="adm-sr">Actions</span></th></tr></thead>
+          <tbody data-badge-rows></tbody>
         </table>
       </div>
     </section>
@@ -198,11 +505,16 @@
     </div>
   </form>
 </dialog>
+<dialog class="adm-dialog adm-dialog--wide" data-ep-dialog aria-labelledby="ep-dialog-title">
+  <div data-ep-dialog-body></div>
+</dialog>
 <div class="adm-toasts" data-toasts aria-live="polite"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
-<script src="js/supabase-config.js?v=20260926o"></script>
-<script src="js/supabase-client.js?v=20260926o"></script>
-<script src="js/premium.js?v=20260926o"></script>
-<script src="js/pages/admin.js?v=20260926o"></script>
+<script src="js/supabase-config.js?v=20261007b"></script>
+<script src="js/supabase-client.js?v=20261007b"></script>
+<script src="js/premium.js?v=20261007b"></script>
+<script src="js/providers.js?v=20261007b"></script>
+<script src="js/anilist-sync.js?v=20261007b"></script>
+<script src="js/pages/admin.js?v=20261007b"></script>
 </body>
 </html>

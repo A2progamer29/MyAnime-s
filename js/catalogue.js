@@ -142,7 +142,7 @@ function partnerCardHTML(item, i) {
     '<div class="card-media"><div class="card-poster">' +
       (item.poster ? '<img src="' + escapeHTML(item.poster) + '" alt="" loading="lazy" decoding="async" width="342" height="513">' : '<span class="card-placeholder">' + icon('image') + '</span>') +
       '<span class="card-type">' + (item.type === 'series' ? 'Série' : 'Film') + '</span>' +
-      (item.rating ? '<span class="card-score">' + icon('star', 'icon--fill') + item.rating.toLocaleString('fr-FR') + '<span class="sr-only"> sur 10 (TMDB)</span></span>' : '') +
+      (item.rating ? '<span class="card-score">' + scoreHTML(item.rating * 10, 'TMDB') + '</span>' : '') +
     '</div></div>' +
     '<div class="card-body">' +
       '<h3 class="card-title"><a class="card-link" href="details.html?src=partenaire&amp;id=' + encodeURIComponent(item.id) + '">' + escapeHTML(item.title) + '</a></h3>' +

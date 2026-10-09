@@ -7,20 +7,20 @@
 <meta name="description" content="Gagne des Anime Coins chaque jour et échange-les contre du Premium.">
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#0D0D13">
-<link rel="icon" href="assets/logos/favicon-64.png" type="image/png">
+<link rel="icon" href="assets/logos/logo.png" type="image/png">
 <link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
 <link rel="preconnect" href="https://graphql.anilist.co" crossorigin>
 <link rel="preconnect" href="https://s4.anilist.co">
 <link rel="preload" href="assets/fonts/unbounded-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/style.css?v=20260926o">
-<link rel="stylesheet" href="css/pages.css?v=20260926o">
-<script src="js/theme-boot.js?v=20260926o"></script>
+<link rel="stylesheet" href="css/style.css?v=20261007b">
+<link rel="stylesheet" href="css/pages.css?v=20261007b">
+<script src="js/theme-boot.js?v=20261007b"></script>
 </head>
 <body data-page="coins">
 <a class="skip-link" href="#contenu">Aller au contenu principal</a>
 <header class="site-header" data-site-header></header>
-<script src="js/layout.js?v=20260926o"></script>
+<script src="js/layout.js?v=20261007b"></script>
 <main id="contenu" tabindex="-1">
   <section class="page-head">
     <div class="wrap page-head-grid">
@@ -49,9 +49,17 @@
       <div class="section-head">
         <p class="eyebrow">Boutique</p>
         <h2 class="section-title" id="shop-title">Échanger mes coins contre du Premium</h2>
-        <p class="section-desc">Les coins dépensés sont retirés immédiatement de ton solde. Un Soutien acheté pendant un Soutien en cours ajoute 30 jours à la date d'expiration.</p>
+        <p class="section-desc">Échange tes coins contre 30, 60 ou 90 jours de Soutien. Les jours s'ajoutent à la fin de ton Premium en cours : tu ne perds jamais de temps. Le Premium à vie ne s'obtient pas avec des coins.</p>
       </div>
       <ul class="shop" data-coins-shop></ul>
+    </section>
+    <section class="section" id="paliers" aria-labelledby="prog-title">
+      <div class="section-head">
+        <p class="eyebrow">Progression</p>
+        <h2 class="section-title" id="prog-title">Succès à paliers</h2>
+        <p class="section-desc">Des objectifs de plus en plus difficiles. Chaque palier atteint est validé automatiquement à l'ouverture de cette page, et sa récompense (Anime Coins, badge ou décoration) n'est donnée qu'une seule fois.</p>
+      </div>
+      <ul class="prog-grid" data-progress><li class="catalog-status">Chargement de ta progression…</li></ul>
     </section>
     <section class="section" aria-labelledby="ach-title">
       <div class="section-head">
@@ -75,7 +83,7 @@
           <li>Une seule récompense par jour. La journée change à minuit, heure de Paris.</li>
           <li>Un jour manqué est toléré : ta série ne progresse pas mais n'est pas perdue. À partir de deux jours manqués, elle repart à 1.</li>
           <li>Des clés d'Anime Coins sont parfois distribuées lors d'événements. Elles s'activent comme une clé Premium, dans Paramètres → Premium.</li>
-          <li>Une série parfaite rapporte environ 1 150 à 1 250 AC par mois : il faut donc environ six semaines pour Soutien, et près d'un an pour Soutien +.</li>
+          <li>Une série parfaite rapporte environ 1 150 à 1 250 AC par mois. Les prix des paliers de 30, 60 et 90 jours sont indiqués dans la boutique ci-dessus.</li>
           <li>Les Anime Coins n'ont aucune valeur en argent : ils ne s'achètent pas, ne se revendent pas et ne se transfèrent pas entre comptes.</li>
         </ul>
       </section>
@@ -91,12 +99,12 @@
 </main>
 <footer class="site-footer" data-site-footer></footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
-<script src="js/supabase-config.js?v=20260926o"></script>
-<script src="js/supabase-client.js?v=20260926o"></script>
-<script src="js/premium.js?v=20260926o"></script>
-<script src="js/ui.js?v=20260926o"></script>
-<script src="js/data.js?v=20260926o"></script>
-<script src="js/preload.js?v=20260926o"></script>
-<script src="js/pages/coins.js?v=20260926o"></script>
+<script src="js/supabase-config.js?v=20261007b"></script>
+<script src="js/supabase-client.js?v=20261007b"></script>
+<script src="js/premium.js?v=20261007b"></script>
+<script src="js/ui.js?v=20261007b"></script>
+<script src="js/data.js?v=20261007b"></script>
+<script src="js/preload.js?v=20261007b"></script>
+<script src="js/pages/coins.js?v=20261007b"></script>
 </body>
 </html>

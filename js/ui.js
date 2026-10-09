@@ -243,6 +243,13 @@ function validatePassword(value) {
   return '';
 }
 
+/* ---- Badges de succès ---- */
+function badgeHTML(b) {
+  var color = /^#[0-9a-f]{6}$/i.test(b.color || '') ? b.color : '#ff4d6d';
+  var img = /^https:\/\/[^\s"<>]+$/.test(b.image_url || '') ? '<img src="' + escapeHTML(b.image_url) + '" alt="" width="18" height="18" loading="lazy">' : icon(/^[a-z0-9-]+$/.test(b.icon || '') ? b.icon : 'trophy');
+  return '<span class="ach-badge" style="--badge:' + color + '" title="' + escapeHTML(b.description || b.name) + '">' + img + '<span>' + escapeHTML(b.name) + '</span></span>';
+}
+
 /* ---- Règles d'upload d'images ---- */
 var IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
 var IMAGE_EXTENSIONS_OK = ['jpg', 'jpeg', 'png', 'webp', 'gif'];
@@ -252,7 +259,9 @@ var IMAGE_RULES = {
     typesLabel: 'JPG, PNG, WebP ou GIF',
     maxBytes: 2 * 1024 * 1024,
     sourceMaxBytes: 15 * 1024 * 1024,
+    gifMaxBytes: 8 * 1024 * 1024,
     minWidth: 128, minHeight: 128,
+    gifMinWidth: 48, gifMinHeight: 48,
     maxWidth: 6000, maxHeight: 6000
   },
   banner: {
@@ -260,7 +269,9 @@ var IMAGE_RULES = {
     typesLabel: 'JPG, PNG, WebP ou GIF',
     maxBytes: 5 * 1024 * 1024,
     sourceMaxBytes: 15 * 1024 * 1024,
+    gifMaxBytes: 10 * 1024 * 1024,
     minWidth: 900, minHeight: 300,
+    gifMinWidth: 300, gifMinHeight: 100,
     maxWidth: 8000, maxHeight: 6000,
     recommended: '1500 × 500 px'
   }
@@ -294,9 +305,11 @@ async function checkImageFile(file, kind) {
   }
   var size = await readImageSize(file);
   if (!size) return { ok: false, message: 'Impossible de lire cette image : le fichier est peut-être endommagé ou n\'est pas une vraie image.' };
-  if (size.width < rules.minWidth || size.height < rules.minHeight) {
+  var gif = file.type === 'image/gif' || (!file.type && ext === 'gif');
+  var minW = gif ? rules.gifMinWidth : rules.minWidth, minH = gif ? rules.gifMinHeight : rules.minHeight;
+  if (size.width < minW || size.height < minH) {
     URL.revokeObjectURL(size.url);
-    return { ok: false, message: 'Image trop petite : ' + size.width + ' × ' + size.height + ' px. Minimum pour ' + rules.name + ' : ' + rules.minWidth + ' × ' + rules.minHeight + ' px.' };
+    return { ok: false, message: 'Image trop petite : ' + size.width + ' × ' + size.height + ' px. Minimum pour ' + rules.name + ' : ' + minW + ' × ' + minH + ' px.' };
   }
   if (size.width > rules.maxWidth || size.height > rules.maxHeight) {
     URL.revokeObjectURL(size.url);
@@ -442,7 +455,7 @@ async function exportCrop(img, rect, out, sourceType) {
   return new File([blob], 'recadrage.' + ext, { type: blob.type });
 }
 
-// Ouvre la fenêtre de recadrage. Résout avec { file, previewUrl }, { keepOriginal: true } (GIF animé gardé tel quel) ou null (annulé).
+// Ouvre la fenêtre de recadrage. Résout avec { file, previewUrl } ou null (annulé). Les GIF animés n'y passent pas.
 function openImageCropper(url, kind, opts) {
   opts = opts || {};
   var out = CROP_OUTPUT[kind];
@@ -464,11 +477,9 @@ function openImageCropper(url, kind, opts) {
           '<button class="icon-btn" type="button" data-zoom="1">' + icon('plus') + '<span class="sr-only">Zoomer</span></button>' +
         '</div>' +
         '<p class="field-hint cropper-warn" data-crop-warn hidden>Zoom très fort : l\'image risque d\'être floue une fois publiée.</p>' +
-        (opts.isGif ? '<p class="field-hint">GIF animé : une fois recadré, il devient une image fixe. Pour garder l\'animation, publie-le sans recadrer.</p>' : '') +
       '</div>' +
       '<div class="dialog-actions">' +
         '<button class="btn btn-ghost" type="button" data-crop-cancel>Annuler</button>' +
-        (opts.isGif ? '<button class="btn" type="button" data-crop-keep>Publier sans recadrer</button>' : '') +
         '<button class="btn btn-primary" type="button" data-crop-ok>' + icon('check') + '<span>Valider et publier</span></button>' +
       '</div>';
     document.body.appendChild(dlg);
@@ -576,8 +587,6 @@ function openImageCropper(url, kind, opts) {
     });
     dlg.addEventListener('cancel', function (e) { e.preventDefault(); finish(null); });
     dlg.querySelector('[data-crop-cancel]').addEventListener('click', function () { finish(null); });
-    var keep = dlg.querySelector('[data-crop-keep]');
-    if (keep) keep.addEventListener('click', function () { finish({ keepOriginal: true }); });
     dlg.querySelector('[data-crop-ok]').addEventListener('click', async function () {
       var btn = this;
       setBusy(btn, true, 'Préparation…');
@@ -601,17 +610,17 @@ function openImageCropper(url, kind, opts) {
 async function prepareProfileImage(file, kind) {
   var check = await checkImageFile(file, kind);
   if (!check.ok) return check;
-  var isGif = file.type === 'image/gif';
-  var crop = await openImageCropper(check.previewUrl, kind, { isGif: isGif, sourceType: file.type });
-  if (!crop) { URL.revokeObjectURL(check.previewUrl); return { cancelled: true }; }
-  if (crop.keepOriginal) {
+  var isGif = file.type === 'image/gif' || (!file.type && /\.gif$/i.test(file.name));
+  if (isGif) {
     var rules = IMAGE_RULES[kind];
-    if (file.size > rules.maxBytes) {
+    if (file.size > rules.gifMaxBytes) {
       URL.revokeObjectURL(check.previewUrl);
-      return { ok: false, message: 'Ce GIF pèse ' + formatBytes(file.size) + ' : pour le garder animé, il doit faire moins de ' + formatBytes(rules.maxBytes) + '. Recadre-le (il deviendra fixe) ou choisis un fichier plus léger.' };
+      return { ok: false, message: 'Ce GIF pèse ' + formatBytes(file.size) + ' : un GIF animé doit faire moins de ' + formatBytes(rules.gifMaxBytes) + '.' };
     }
     return { ok: true, file: file, previewUrl: check.previewUrl, width: check.width, height: check.height };
   }
+  var crop = await openImageCropper(check.previewUrl, kind, { sourceType: file.type });
+  if (!crop) { URL.revokeObjectURL(check.previewUrl); return { cancelled: true }; }
   URL.revokeObjectURL(check.previewUrl);
   return { ok: true, file: crop.file, previewUrl: crop.previewUrl, width: CROP_OUTPUT[kind].width, height: CROP_OUTPUT[kind].height };
 }

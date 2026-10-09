@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="fr" data-preload>
+<head>
+<meta charset="UTF-8">
+<meta name="robots" content="noindex">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Paiement sécurisé — LumaAnime</title>
+<meta name="description" content="Paiement sécurisé par SumUp de ta clé Premium LumaAnime.">
+<meta name="theme-color" content="#0D0D13">
+<link rel="icon" href="assets/logos/logo.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
+<link rel="preconnect" href="https://graphql.anilist.co" crossorigin>
+<link rel="preconnect" href="https://s4.anilist.co">
+<link rel="preload" href="assets/fonts/unbounded-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/style.css?v=20261007b">
+<link rel="stylesheet" href="css/pages.css?v=20261007b">
+<script src="js/theme-boot.js?v=20261007b"></script>
+</head>
+<body data-page="paiement">
+<a class="skip-link" href="#contenu">Aller au contenu principal</a>
+<header class="site-header" data-site-header></header>
+<script src="js/layout.js?v=20261007b"></script>
+<main id="contenu" tabindex="-1">
+  <div class="wrap pay-page">
+    <nav class="breadcrumb" aria-label="Fil d'Ariane"><ol><li><a href="premium.html">Premium</a></li><li><a href="acheter.html" data-pay-back-crumb>Acheter une clé</a></li><li aria-current="page">Paiement</li></ol></nav>
+    <ol class="stepper checkout-stepper" aria-label="Étapes de l'achat">
+      <li class="is-done">1. Options</li>
+      <li aria-current="step">2. Paiement</li>
+      <li>3. Ta clé</li>
+    </ol>
+    <div data-pay-guard hidden></div>
+    <div class="pay-layout" data-pay-content hidden>
+      <aside class="pay-recap" aria-label="Ta commande" data-pay-recap></aside>
+      <section class="pay-panel" aria-labelledby="pay-title" data-pay-panel>
+        <div class="pay-panel-head">
+          <h1 class="section-title" id="pay-title" tabindex="-1"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg?v=20261007b#lock"></use></svg>Paiement sécurisé</h1>
+          <p>Saisis ta carte dans le formulaire SumUp ci-dessous. LumaAnime ne voit jamais tes données bancaires.</p>
+        </div>
+        <div class="form-alert" role="alert" data-pay-alert></div>
+        <p class="catalog-status pay-loading" data-pay-loading role="status">Chargement du formulaire de paiement…</p>
+        <div class="pay-card" id="sumup-card"></div>
+        <p class="pay-foot"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg?v=20261007b#shield"></use></svg><span>Paiement unique, sans abonnement ni renouvellement automatique. <a class="link" href="acheter.html" data-pay-back>Modifier ma commande</a></span></p>
+      </section>
+      <section class="pay-panel key-reveal" data-key-reveal hidden aria-labelledby="key-title">
+        <h1 class="section-title" id="key-title" tabindex="-1">Ta clé Premium</h1>
+        <p>Paiement confirmé, merci pour ton soutien !</p>
+        <p class="key-code" data-key-value></p>
+        <div class="action-row">
+          <button class="btn" type="button" data-copy-key><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg?v=20261007b#copy"></use></svg>Copier la clé</button>
+          <button class="btn btn-primary" type="button" data-activate-key hidden><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg?v=20261007b#key"></use></svg>Activer sur mon compte</button>
+        </div>
+        <p class="field-hint" data-key-note></p>
+      </section>
+    </div>
+  </div>
+</main>
+<footer class="site-footer" data-site-footer></footer>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
+<script src="js/supabase-config.js?v=20261007b"></script>
+<script src="js/supabase-client.js?v=20261007b"></script>
+<script src="js/premium.js?v=20261007b"></script>
+<script src="js/ui.js?v=20261007b"></script>
+<script src="js/data.js?v=20261007b"></script>
+<script src="js/preload.js?v=20261007b"></script>
+<script src="js/pages/paiement.js?v=20261007b"></script>
+</body>
+</html>

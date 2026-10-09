@@ -132,40 +132,117 @@ document.addEventListener('DOMContentLoaded', function () {
       return;
     }
 
-    var done = document.querySelector('[data-register-done]');
-    var doneText = done.querySelector('[data-done-text]');
     if (res.needsConfirmation) {
-      doneText.textContent = 'Un e-mail de confirmation a été envoyé à ' + fields.email.value.trim() + '. Ouvre le lien qu\'il contient pour activer ton compte, puis connecte-toi.' +
-        ((files.avatar || files.banner) ? ' Ta photo et ta bannière n\'ont pas encore été envoyées : tu pourras les ajouter dans tes paramètres après ta première connexion.' : '');
-      done.querySelector('[data-done-login]').hidden = false;
-      form.hidden = true;
-      document.querySelector('[data-stepper]').hidden = true;
-      done.hidden = false;
-      done.querySelector('h2').focus();
+      showCodeStep(fields.email.value.trim());
       return;
     }
+    await finishRegistration();
+  });
 
+  var done = document.querySelector('[data-register-done]');
+  var doneText = done.querySelector('[data-done-text]');
+
+  function showDone(text, button) {
+    doneText.textContent = text;
+    done.querySelector(button).hidden = false;
+    form.hidden = true;
+    codeForm.hidden = true;
+    document.querySelector('[data-stepper]').hidden = true;
+    done.hidden = false;
+    done.querySelector('h2').focus();
+  }
+
+  async function finishRegistration() {
     var problems = [];
+    var btn = codeForm.hidden ? submit : codeSubmit;
     if (files.avatar) {
-      setBusy(submit, true, 'Envoi de la photo de profil…');
+      setBusy(btn, true, 'Envoi de la photo de profil…');
       var a = await uploadAvatar(files.avatar);
       if (a.error) problems.push('Photo de profil : ' + a.error);
     }
     if (files.banner) {
-      setBusy(submit, true, 'Envoi de la bannière…');
+      setBusy(btn, true, 'Envoi de la bannière…');
       var b = await uploadBanner(files.banner);
       if (b.error) problems.push('Bannière : ' + b.error);
     }
     if (problems.length) {
-      done.querySelector('[data-done-settings]').hidden = false;
-      doneText.textContent = 'Ton compte est créé et tu es connecté. Certaines images n\'ont pas pu être envoyées — ' + problems.join(' ') + ' Tu peux réessayer depuis tes paramètres.';
-      form.hidden = true;
-      document.querySelector('[data-stepper]').hidden = true;
-      done.hidden = false;
-      done.querySelector('h2').focus();
+      showDone('Ton compte est créé et tu es connecté. Certaines images n\'ont pas pu être envoyées — ' + problems.join(' ') + ' Tu peux réessayer depuis tes paramètres.', '[data-done-settings]');
       return;
     }
     window.location.href = safeNextUrl(new URLSearchParams(location.search).get('next')) || 'index.html';
+  }
+
+  /* ---- Code de confirmation reçu par e-mail ---- */
+  var codeForm = document.querySelector('[data-register-code]');
+  var codeInput = codeForm.elements.code;
+  var codeStatus = codeForm.querySelector('[data-code-status]');
+  var codeSubmit = codeForm.querySelector('[type="submit"]');
+  var resendBtn = codeForm.querySelector('[data-code-resend]');
+  var codeEmail = '';
+  var resendTimer = null;
+
+  function startResendCooldown(seconds) {
+    clearInterval(resendTimer);
+    var left = seconds;
+    resendBtn.disabled = true;
+    resendBtn.textContent = 'Renvoyer le code (' + left + ' s)';
+    resendTimer = setInterval(function () {
+      left -= 1;
+      if (left > 0) { resendBtn.textContent = 'Renvoyer le code (' + left + ' s)'; return; }
+      clearInterval(resendTimer);
+      resendBtn.disabled = false;
+      resendBtn.textContent = 'Renvoyer le code';
+    }, 1000);
+  }
+
+  function showCodeStep(email) {
+    codeEmail = email;
+    try { sessionStorage.setItem('lum_confirm_email', email); } catch (err) {}
+    codeForm.querySelector('[data-code-text]').textContent = 'Un code de confirmation a été envoyé à ' + email + '. Saisis-le ci-dessous pour activer ton compte.';
+    form.hidden = true;
+    document.querySelector('[data-stepper]').hidden = true;
+    codeForm.hidden = false;
+    startResendCooldown(60);
+    codeInput.focus();
+  }
+
+  codeInput.addEventListener('input', function () {
+    var digits = codeInput.value.replace(/\D/g, '').slice(0, 10);
+    if (digits !== codeInput.value) codeInput.value = digits;
+    if (codeInput.getAttribute('aria-invalid')) setFieldError(codeInput, '');
+  });
+
+  codeForm.addEventListener('submit', async function (e) {
+    e.preventDefault();
+    codeStatus.textContent = '';
+    codeStatus.classList.remove('form-alert--success');
+    var code = codeInput.value.trim();
+    var error = /^\d{6,10}$/.test(code) ? '' : 'Saisis le code à chiffres reçu par e-mail.';
+    setFieldError(codeInput, error);
+    if (error) { codeInput.focus(); return; }
+    setBusy(codeSubmit, true, 'Vérification…');
+    var res = await verifySignupCode(codeEmail, code);
+    if (!res.ok) {
+      setBusy(codeSubmit, false);
+      setFieldError(codeInput, res.error);
+      codeInput.focus();
+      return;
+    }
+    await finishRegistration();
+  });
+
+  resendBtn.addEventListener('click', async function () {
+    codeStatus.textContent = '';
+    codeStatus.classList.remove('form-alert--success');
+    setBusy(resendBtn, true, 'Envoi…');
+    var res = await resendSignupCode(codeEmail);
+    setBusy(resendBtn, false);
+    if (!res.ok) { codeStatus.textContent = res.error; return; }
+    codeStatus.classList.add('form-alert--success');
+    codeStatus.textContent = 'Nouveau code envoyé à ' + codeEmail + '. Seul le dernier code reçu est valable.';
+    codeInput.value = '';
+    codeInput.focus();
+    startResendCooldown(60);
   });
 
   document.addEventListener('myanimes:user', function (e) {
@@ -178,4 +255,16 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   goTo(1, true);
+
+  if (new URLSearchParams(location.search).get('confirmer')) {
+    var pendingEmail = '';
+    try { pendingEmail = sessionStorage.getItem('lum_confirm_email') || ''; } catch (err) {}
+    if (pendingEmail) {
+      showCodeStep(pendingEmail);
+      codeForm.querySelector('[data-code-text]').textContent = 'Saisis le code reçu à ' + pendingEmail + ' pour activer ton compte. Tu ne le trouves plus ? Demande un nouveau code.';
+      clearInterval(resendTimer);
+      resendBtn.disabled = false;
+      resendBtn.textContent = 'Renvoyer le code';
+    }
+  }
 });

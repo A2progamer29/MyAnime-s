@@ -42,6 +42,10 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!res.ok) {
       setBusy(submit, false);
       alertBox.textContent = res.error;
+      if (res.unconfirmed) {
+        try { sessionStorage.setItem('lum_confirm_email', email.value.trim()); } catch (err) {}
+        alertBox.insertAdjacentHTML('beforeend', ' <a class="link" href="inscription.html?confirmer=1">Saisir mon code</a>');
+      }
       password.focus();
       return;
     }

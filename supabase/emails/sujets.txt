@@ -1,8 +1,15 @@
-Modèle Supabase (Authentication → Emails → Templates) → fichier → sujet
+Modèles Supabase (Authentication → Emails) → fichier → sujet
 
-Confirm signup         → 1-confirmation-inscription.html        Sujet : Confirme ton compte LumaAnime
+Onglet « Templates » : coller le HTML dans « Message body » et le sujet dans « Subject »
+Confirm signup         → 1-confirmation-inscription.html        Sujet : Ton code d'inscription LumaAnime
 Invite user            → 2-invitation.html                      Sujet : Ton invitation sur LumaAnime
 Magic Link             → 3-lien-de-connexion.html               Sujet : Ton lien de connexion LumaAnime
 Change Email Address   → 4-changement-adresse.html              Sujet : Confirme ta nouvelle adresse e-mail
 Reset Password         → 5-reinitialisation-mot-de-passe.html   Sujet : Réinitialise ton mot de passe LumaAnime
 Reauthentication       → 6-code-de-verification.html            Sujet : Ton code de vérification LumaAnime
+
+Onglet « Security » / notifications : activer chaque notification, puis coller le HTML et le sujet
+Password changed       → 7-mot-de-passe-modifie.html            Sujet : Ton mot de passe LumaAnime a été modifié
+Email address changed  → 8-adresse-modifiee.html                Sujet : L'adresse e-mail de ton compte LumaAnime a changé
+Identity linked        → 9-connexion-associee.html              Sujet : Nouveau moyen de connexion sur ton compte LumaAnime
+Identity unlinked      → 10-connexion-retiree.html              Sujet : Moyen de connexion retiré de ton compte LumaAnime

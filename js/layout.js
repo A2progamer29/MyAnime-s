@@ -4,7 +4,7 @@
    + petits utilitaires partagés (échappement HTML, icônes)
    ========================================================= */
 
-var ICON_SPRITE = 'assets/icons/sprite.svg';
+var ICON_SPRITE = 'assets/icons/sprite.svg?v=20261007b';
 
 function escapeHTML(value) {
   return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
@@ -16,7 +16,16 @@ function safeImageUrl(url) {
   return /^(https:\/\/|blob:)/i.test(String(url || '')) ? String(url) : '';
 }
 
+// Avatar et bannière : uniquement des images envoyées dans le stockage du site (ou un aperçu local blob:)
+var PROFILE_MEDIA_RE = /^https:\/\/phjpyaiheswpuqjpdfuo\.supabase\.co\/storage\/v1\/object\/public\/(avatars|banners)\/[A-Za-z0-9_.\/-]+$/;
+function profileImageUrl(url) {
+  var s = String(url || '');
+  if (/^blob:/i.test(s)) return s;
+  return PROFILE_MEDIA_RE.test(s) && s.indexOf('..') === -1 ? s : '';
+}
+
 function icon(name, extraClass) {
+  if (!/^[a-z0-9-]+$/.test(String(name || ''))) name = 'trophy';
   var cls = 'icon' + (extraClass ? ' ' + extraClass : '');
   return '<svg class="' + cls + '" aria-hidden="true" focusable="false"><use href="' + ICON_SPRITE + '#' + name + '"></use></svg>';
 }
@@ -36,6 +45,7 @@ function currentRelativeUrl() {
 }
 
 var SITE_NAV = [
+  { page: 'wishboard', href: 'wishboard.html', label: 'Wishboard', icon: 'sparkle', main: true, tab: true },
   { page: 'accueil', href: 'index.html', label: 'Accueil', icon: 'home', main: false, tab: true },
   { page: 'catalogue', href: 'catalogue.html', label: 'Catalogue', icon: 'grid', main: true, tab: true },
   { page: 'calendrier', href: 'calendrier.html', label: 'Calendrier', icon: 'calendar', main: true, tab: true },
@@ -112,11 +122,38 @@ function guestHTML() {
 }
 
 function avatarHTML(user, extraClass) {
-  var url = safeImageUrl(user && user.avatarUrl);
+  var url = profileImageUrl(user && user.avatarUrl);
   var letter = ((user && user.pseudo) || '?').trim().charAt(0).toUpperCase() || '?';
   return '<span class="avatar' + (extraClass ? ' ' + extraClass : '') + '" aria-hidden="true">' +
     (url ? '<img src="' + escapeHTML(url) + '" alt="">' : '<span class="avatar-letter">' + escapeHTML(letter) + '</span>') +
   '</span>';
+}
+
+// Décoration équipée : { image_url, placement }. Les emplacements « avatar_* » se posent sur la photo,
+// les emplacements « banner_* » sur la bannière (voir decorationBannerHTML).
+var AVATAR_DECO_PLACES = ['avatar_frame', 'avatar_top', 'avatar_top_left', 'avatar_top_right', 'avatar_bottom_left', 'avatar_bottom_right'];
+var BANNER_DECO_PLACES = ['banner_full', 'banner_top_left', 'banner_top_right', 'banner_bottom_left', 'banner_bottom_right'];
+
+function decorationParts(deco) {
+  if (!deco) return null;
+  var url = typeof deco === 'string' ? deco : deco.image_url;
+  if (!/^https:\/\/[^\s"<>]+$/.test(String(url || ''))) return null;
+  var place = typeof deco === 'string' ? 'avatar_frame' : deco.placement;
+  if (AVATAR_DECO_PLACES.indexOf(place) === -1 && BANNER_DECO_PLACES.indexOf(place) === -1) place = 'avatar_frame';
+  return { url: url, place: place };
+}
+
+function decoratedAvatarHTML(user, deco, extraClass) {
+  var d = decorationParts(deco);
+  if (!d || AVATAR_DECO_PLACES.indexOf(d.place) === -1) return avatarHTML(user, extraClass);
+  return '<span class="avatar-deco-wrap' + (extraClass ? ' ' + extraClass + '-wrap' : '') + '">' + avatarHTML(user, extraClass) +
+    '<img class="avatar-deco avatar-deco--' + d.place.replace('avatar_', '') + '" src="' + escapeHTML(d.url) + '" alt="" aria-hidden="true" loading="lazy" decoding="async"></span>';
+}
+
+function decorationBannerHTML(deco) {
+  var d = decorationParts(deco);
+  if (!d || BANNER_DECO_PLACES.indexOf(d.place) === -1) return '';
+  return '<img class="banner-deco banner-deco--' + d.place.replace('banner_', '') + '" src="' + escapeHTML(d.url) + '" alt="" aria-hidden="true" loading="lazy" decoding="async">';
 }
 
 function renderAccount(user) {
@@ -151,6 +188,7 @@ function renderAccount(user) {
     '<div class="account-menu" id="account-menu" hidden>' +
       '<div class="account-menu-head"><strong>' + escapeHTML(user.pseudo) + '</strong><span>' + escapeHTML(user.email) + '</span></div>' +
       '<ul>' +
+        item('wishboard.html', 'wishboard', 'sparkle', 'Wishboard') +
         item('profil.html?id=' + encodeURIComponent(user.id), 'profil', 'user', 'Mon profil public') +
         item('parametres.html', 'parametres', 'sliders', 'Paramètres') +
         (status.active ? item('mon-premium.html', 'mon-premium', 'crown', 'Mon Premium') : item('premium.html', 'premium', 'crown', 'Premium')) +
@@ -248,6 +286,7 @@ function renderFooter() {
           '<p>Catalogue, calendrier de diffusion et suivi d\'animes. Les fiches proviennent d\'AniList. Aucun épisode n\'est hébergé ni diffusé sur le site : chaque fiche renvoie vers les plateformes officielles.</p>' +
         '</div>' +
         '<nav class="footer-col" aria-labelledby="footer-explore"><h2 id="footer-explore">Explorer</h2><ul>' +
+          '<li><a href="wishboard.html">Wishboard</a></li>' +
           '<li><a href="catalogue.html">Catalogue</a></li>' +
           '<li><a href="calendrier.html">Calendrier</a></li>' +
           '<li><a href="simulcast.html">Simulcast</a></li>' +
@@ -294,10 +333,52 @@ async function renderAuthWall() {
   } catch (e) {}
 }
 
+/* ---- Bandeau au-dessus du header (réglé dans le panel admin) ---- */
+var BANNER_ANIMATIONS = ['none', 'fade', 'slide', 'marquee', 'pulse'];
+
+function renderSiteBanner(cfg) {
+  var header = document.querySelector('[data-site-header]');
+  if (!header) return;
+  var el = document.querySelector('[data-site-banner]');
+  if (!cfg || !cfg.enabled || !String(cfg.text || '').trim()) { if (el) el.remove(); return; }
+  var anim = BANNER_ANIMATIONS.indexOf(cfg.animation) !== -1 ? cfg.animation : 'none';
+  var color = /^#[0-9a-f]{6}$/i.test(cfg.color || '') ? cfg.color : '#0d0d13';
+  var bg = /^#[0-9a-f]{6}$/i.test(cfg.background || '') ? cfg.background : '#ff4d6d';
+  var link = String(cfg.link || '');
+  var safeLink = /^https?:\/\/[^\s"<>]+$/i.test(link) || /^[a-z0-9-]+\.html([?#][^\s"<>]*)?$/i.test(link) ? link : '';
+  var text = '<span class="site-banner-text">' + escapeHTML(cfg.text) + '</span>';
+  var inner = anim === 'marquee'
+    ? '<span class="site-banner-track" aria-hidden="true">' + text + text + text + text + '</span><span class="sr-only">' + escapeHTML(cfg.text) + '</span>'
+    : text;
+  var html = safeLink
+    ? '<a class="site-banner-link" href="' + escapeHTML(safeLink) + '"' + (cfg.new_tab ? ' target="_blank" rel="noopener"' : '') + '>' + inner + (cfg.new_tab ? '<span class="sr-only"> (nouvel onglet)</span>' : '') + '</a>'
+    : '<p class="site-banner-link">' + inner + '</p>';
+  if (!el) {
+    el = document.createElement('div');
+    el.setAttribute('data-site-banner', '');
+    el.setAttribute('role', 'region');
+    el.setAttribute('aria-label', 'Annonce');
+    header.parentNode.insertBefore(el, header);
+  }
+  el.className = 'site-banner site-banner--' + anim;
+  el.style.setProperty('--banner-fg', color);
+  el.style.setProperty('--banner-bg', bg);
+  el.innerHTML = html;
+}
+
 renderHeader();
+try { renderSiteBanner((JSON.parse(localStorage.getItem('lum_site_settings') || 'null') || {}).banner); } catch (e) {}
 
 document.addEventListener('DOMContentLoaded', async function () {
   renderFooter();
+  if (typeof loadSiteSettings === 'function') loadSiteSettings().then(function (cfg) {
+    renderSiteBanner(cfg && cfg.banner);
+    var tiers = cfg && cfg.coin_tiers;
+    document.querySelectorAll('[data-coin-price]').forEach(function (el) {
+      var price = tiers && Number(tiers[el.getAttribute('data-coin-price')]);
+      if (price) el.textContent = 'ou dès ' + price.toLocaleString('fr-FR') + ' Anime Coins (30 jours)';
+    });
+  });
   renderAuthWall();
   var user = null;
   if (typeof getCurrentUser === 'function') {

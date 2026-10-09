@@ -77,7 +77,7 @@
     { label: 'Catalogue', run: typeof loadCatalogData === 'function' ? loadCatalogData({ page: 1 }) : null },
     { label: 'Synopsis en français', run: home.then(function (d) {
       if (!d || typeof frenchSynopses !== 'function') return null;
-      return frenchSynopses(d.hero.media.filter(function (m) { return !m.isAdult && m.description; }).slice(0, 10).map(function (m) { return m.id; }));
+      return frenchSynopses(d.hero.media.filter(function (m) { return !m.isAdult && m.description; }).slice(0, 10).map(function (m) { rememberMalId(m); return m.id; }));
     }) },
     { label: 'Images', run: home.then(function (d) {
       if (!d) return null;

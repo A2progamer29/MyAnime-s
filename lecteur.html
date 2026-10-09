@@ -1,99 +1,691 @@
 <!DOCTYPE html>
 <html lang="fr" data-preload>
+
 <head>
+
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Lecteur de démonstration — LumaAnime</title>
-<meta name="description" content="Lecteur vidéo de démonstration de LumaAnime. Aucun épisode n'est diffusé sur le site.">
-<meta name="theme-color" content="#0D0D13">
-<link rel="icon" href="assets/logos/favicon-64.png" type="image/png">
-<link rel="apple-touch-icon" href="assets/logos/apple-touch-icon.png">
-<link rel="preconnect" href="https://graphql.anilist.co" crossorigin>
-<link rel="preconnect" href="https://s4.anilist.co">
-<link rel="preload" href="assets/fonts/unbounded-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="css/style.css?v=20260926o">
-<link rel="stylesheet" href="css/pages.css?v=20260926o">
-<script src="js/theme-boot.js?v=20260926o"></script>
+
+<meta
+  name="viewport"
+  content="width=device-width, initial-scale=1, viewport-fit=cover"
+>
+
+<title>Lecteur — LumaAnime</title>
+
+<meta
+  name="description"
+  content="Lecteur vidéo LumaAnime."
+>
+
+<meta
+  name="theme-color"
+  content="#0D0D13"
+>
+
+<link
+  rel="icon"
+  href="assets/logos/logo.png"
+  type="image/png"
+>
+
+<link
+  rel="apple-touch-icon"
+  href="assets/logos/apple-touch-icon.png"
+>
+
+<link
+  rel="preconnect"
+  href="https://graphql.anilist.co"
+  crossorigin
+>
+
+<link
+  rel="preconnect"
+  href="https://s4.anilist.co"
+>
+
+<link
+  rel="preload"
+  href="assets/fonts/unbounded-latin-wght-normal.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+>
+
+<link
+  rel="preload"
+  href="assets/fonts/manrope-latin-wght-normal.woff2"
+  as="font"
+  type="font/woff2"
+  crossorigin
+>
+
+<link
+  rel="stylesheet"
+  href="css/style.css?v=20261007b"
+>
+
+<link
+  rel="stylesheet"
+  href="css/pages.css?v=20261007b"
+>
+
+<link
+  rel="stylesheet"
+  href="css/player-sources.css?v=20261007b"
+>
+
+<script src="js/theme-boot.js?v=20261007b"></script>
+
 </head>
-<body data-page="lecteur" class="page-player">
-<a class="skip-link" href="#contenu">Aller au contenu principal</a>
-<script src="js/layout.js?v=20260926o"></script>
-<main id="contenu" tabindex="-1">
-  <div class="wp" data-player role="region" aria-label="Lecteur vidéo">
-    <div class="wp-top">
-      <a class="wp-btn" href="catalogue.html" data-back><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#arrow-left"></use></svg><span class="sr-only">Retour</span></a>
-      <p class="wp-title" data-player-title>Lecteur de démonstration</p>
-      <div class="wp-group">
-        <button class="wp-btn" type="button" data-info aria-expanded="false" aria-controls="wp-info" title="Informations"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#info"></use></svg><span class="sr-only">Informations sur ce titre</span></button>
-        <a class="wp-btn" href="mailto:myanimesfr@proton.me?subject=Lecteur%20LumaAnime" data-report title="Signaler un problème"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#flag"></use></svg><span class="sr-only">Signaler un problème</span></a>
-      </div>
+
+<body
+  data-page="lecteur"
+  class="page-player"
+>
+
+<a
+  class="skip-link"
+  href="#contenu"
+>
+  Aller au contenu principal
+</a>
+
+<script src="js/layout.js?v=20261007b"></script>
+
+<main
+  id="contenu"
+  tabindex="-1"
+>
+
+<div
+  class="wp"
+  data-player
+  role="region"
+  aria-label="Lecteur vidéo"
+>
+
+  <div class="wp-top">
+
+    <a
+      class="wp-btn"
+      href="catalogue.html"
+      data-back
+    >
+
+      <svg
+        class="icon"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <use href="assets/icons/sprite.svg?v=20261007b#arrow-left"></use>
+      </svg>
+
+      <span class="sr-only">
+        Retour
+      </span>
+
+    </a>
+
+    <p
+      class="wp-title"
+      data-player-title
+    >
+      Lecteur
+    </p>
+
+    <div class="wp-group">
+
+      <button
+        class="wp-btn"
+        type="button"
+        data-info
+        aria-expanded="false"
+        aria-controls="wp-info"
+        title="Informations"
+      >
+
+        <svg
+          class="icon"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <use href="assets/icons/sprite.svg?v=20261007b#info"></use>
+        </svg>
+
+        <span class="sr-only">
+          Informations sur ce titre
+        </span>
+
+      </button>
+
+      <a
+        class="wp-btn"
+        href="mailto:myanimesfr@proton.me?subject=Problème%20lecteur%20LumaAnime"
+        data-report
+        title="Signaler un problème"
+      >
+
+        <svg
+          class="icon"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <use href="assets/icons/sprite.svg?v=20261007b#flag"></use>
+        </svg>
+
+        <span class="sr-only">
+          Signaler un problème
+        </span>
+
+      </a>
+
     </div>
-    <div class="wp-stage">
-      <video data-video preload="metadata" playsinline>
-        <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
-        <p>Ton navigateur ne peut pas lire cette vidéo.</p>
-      </video>
-      <button class="wp-center" type="button" data-overlay tabindex="-1" aria-hidden="true"><svg class="icon icon--fill" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#play"></use></svg></button>
-      <p class="wp-flash" data-flash aria-hidden="true"></p>
-      <aside class="wp-info" id="wp-info" data-info-panel hidden aria-label="Informations">
-        <img data-info-poster alt="" width="96" height="136" hidden>
-        <div>
-          <p class="wp-info-title" data-info-title>Vidéo de démonstration</p>
-          <p class="wp-info-meta" data-info-meta></p>
-          <p class="wp-info-text" data-info-text></p>
-          <a class="wp-link" href="catalogue.html" data-info-link hidden>Voir la fiche complète</a>
-        </div>
-      </aside>
-      <div class="wp-menu" data-settings-menu hidden>
-        <p class="wp-menu-title" id="speed-title">Vitesse de lecture</p>
-        <div role="radiogroup" aria-labelledby="speed-title" data-speeds></div>
-      </div>
-    </div>
-    <div class="wp-progress">
-      <input class="wp-seek" type="range" min="0" max="0" step="0.1" value="0" data-seek aria-label="Position dans la vidéo">
-      <span class="wp-tip" data-seek-tip hidden>0:00</span>
-    </div>
-    <div class="wp-bar">
-      <button class="wp-btn" type="button" data-play></button>
-      <button class="wp-btn" type="button" data-skip="-10" title="Reculer de 10 secondes"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#skip-back"></use></svg><span class="sr-only">Reculer de 10 secondes</span></button>
-      <button class="wp-btn" type="button" data-skip="10" title="Avancer de 10 secondes"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#skip-forward"></use></svg><span class="sr-only">Avancer de 10 secondes</span></button>
-      <div class="wp-volume">
-        <button class="wp-btn" type="button" data-mute></button>
-        <input class="wp-vol" type="range" min="0" max="1" step="0.05" value="1" data-volume aria-label="Volume">
-      </div>
-      <span class="wp-time" data-time aria-hidden="true">0:00 <span>/ 0:00</span></span>
-      <span class="wp-spacer"></span>
-      <button class="wp-btn" type="button" data-settings aria-expanded="false" aria-haspopup="true" title="Réglages"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#settings"></use></svg><span class="sr-only">Réglages de lecture</span></button>
-      <button class="wp-btn" type="button" data-cast hidden title="Diffuser sur un appareil"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#cast"></use></svg><span class="sr-only">Diffuser sur un autre appareil</span></button>
-      <button class="wp-btn" type="button" data-pip hidden title="Image dans l'image"><svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#pip"></use></svg><span class="sr-only">Image dans l'image</span></button>
-      <button class="wp-btn" type="button" data-fullscreen></button>
-    </div>
+
   </div>
-  <div class="wrap watch-below">
-    <div class="notice">
-      <svg class="icon" aria-hidden="true" focusable="false"><use href="assets/icons/sprite.svg#info"></use></svg>
-      <div class="notice-body">
-        <p><strong>Vidéo de démonstration.</strong> Aucun épisode n'est disponible sur LumaAnime : ce lecteur diffuse un court-métrage libre de droits, quel que soit l'anime choisi. Pour regarder la série, passe par une plateforme officielle depuis sa fiche.</p>
+
+  <div class="wp-stage">
+
+    <video
+      data-video
+      preload="metadata"
+      playsinline
+      controlslist="nodownload"
+    >
+
+      <p>
+        Ton navigateur ne peut pas lire cette vidéo.
+      </p>
+
+    </video>
+
+    <div
+      class="wp-stage-msg"
+      data-stage-msg
+      role="status"
+      aria-live="polite"
+      hidden
+    ></div>
+
+    <button
+      class="wp-center"
+      type="button"
+      data-overlay
+      tabindex="-1"
+      aria-hidden="true"
+    >
+
+      <svg
+        class="icon icon--fill"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <use href="assets/icons/sprite.svg?v=20261007b#play"></use>
+      </svg>
+
+    </button>
+
+    <p
+      class="wp-flash"
+      data-flash
+      aria-hidden="true"
+    ></p>
+
+    <aside
+      class="wp-info"
+      id="wp-info"
+      data-info-panel
+      hidden
+      aria-label="Informations"
+    >
+
+      <img
+        data-info-poster
+        alt=""
+        width="96"
+        height="136"
+        hidden
+      >
+
+      <div>
+
+        <p
+          class="wp-info-title"
+          data-info-title
+        >
+          Chargement…
+        </p>
+
+        <p
+          class="wp-info-meta"
+          data-info-meta
+        ></p>
+
+        <p
+          class="wp-info-text"
+          data-info-text
+        ></p>
+
+        <a
+          class="wp-link"
+          href="catalogue.html"
+          data-info-link
+          hidden
+        >
+          Voir la fiche complète
+        </a>
+
       </div>
+
+    </aside>
+
+    <div
+      class="wp-menu"
+      data-settings-menu
+      hidden
+    >
+
+      <p
+        class="wp-menu-title"
+        id="speed-title"
+      >
+        Vitesse de lecture
+      </p>
+
+      <div
+        role="radiogroup"
+        aria-labelledby="speed-title"
+        data-speeds
+      ></div>
+
     </div>
-    <h1 class="watch-title" data-anime-title>Chargement…</h1>
-    <p class="watch-meta" data-anime-meta></p>
-    <div class="watch-actions" data-anime-actions></div>
-    <p class="watch-synopsis" data-anime-synopsis hidden></p>
-    <p class="lang-note" data-synopsis-note hidden></p>
-    <p class="credit">Vidéo : <cite lang="en">Big Buck Bunny</cite> © 2008 Blender Foundation, licence <a class="link" href="https://creativecommons.org/licenses/by/3.0/deed.fr" rel="noopener">Creative Commons BY 3.0</a>. Raccourcis : Espace ou K lecture/pause, J et L ±10 secondes, M son, F plein écran, I informations.</p>
+
   </div>
+
+  <div class="wp-progress">
+
+    <input
+      class="wp-seek"
+      type="range"
+      min="0"
+      max="0"
+      step="0.1"
+      value="0"
+      data-seek
+      aria-label="Position dans la vidéo"
+    >
+
+    <span
+      class="wp-tip"
+      data-seek-tip
+      hidden
+    >
+      0:00
+    </span>
+
+  </div>
+
+  <div class="wp-bar">
+
+    <button
+      class="wp-btn"
+      type="button"
+      data-play
+    ></button>
+
+    <button
+      class="wp-btn"
+      type="button"
+      data-skip="-10"
+      title="Reculer de 10 secondes"
+    >
+
+      <svg
+        class="icon"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <use href="assets/icons/sprite.svg?v=20261007b#skip-back"></use>
+      </svg>
+
+      <span class="sr-only">
+        Reculer de 10 secondes
+      </span>
+
+    </button>
+
+    <button
+      class="wp-btn"
+      type="button"
+      data-skip="10"
+      title="Avancer de 10 secondes"
+    >
+
+      <svg
+        class="icon"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <use href="assets/icons/sprite.svg?v=20261007b#skip-forward"></use>
+      </svg>
+
+      <span class="sr-only">
+        Avancer de 10 secondes
+      </span>
+
+    </button>
+
+    <div class="wp-volume">
+
+      <button
+        class="wp-btn"
+        type="button"
+        data-mute
+      ></button>
+
+      <input
+        class="wp-vol"
+        type="range"
+        min="0"
+        max="1"
+        step="0.05"
+        value="1"
+        data-volume
+        aria-label="Volume"
+      >
+
+    </div>
+
+    <span
+      class="wp-time"
+      data-time
+      aria-hidden="true"
+    >
+      0:00 <span>/ 0:00</span>
+    </span>
+
+    <a
+      class="wp-btn wp-nav"
+      data-prev
+      hidden
+    >
+
+      <svg
+        class="icon"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <use href="assets/icons/sprite.svg?v=20261007b#chevron-left"></use>
+      </svg>
+
+      <span
+        class="wp-nav-text"
+        aria-hidden="true"
+      >
+        Précédent
+      </span>
+
+      <span class="sr-only">
+        Épisode précédent
+      </span>
+
+    </a>
+
+    <a
+      class="wp-btn wp-nav"
+      data-next
+      hidden
+    >
+
+      <span
+        class="wp-nav-text"
+        aria-hidden="true"
+      >
+        Suivant
+      </span>
+
+      <svg
+        class="icon"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <use href="assets/icons/sprite.svg?v=20261007b#chevron-right"></use>
+      </svg>
+
+      <span class="sr-only">
+        Épisode suivant
+      </span>
+
+    </a>
+
+    <span class="wp-spacer"></span>
+
+    <button
+      class="wp-btn"
+      type="button"
+      data-settings
+      aria-expanded="false"
+      aria-haspopup="true"
+      title="Réglages"
+    >
+
+      <svg
+        class="icon"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <use href="assets/icons/sprite.svg?v=20261007b#settings"></use>
+      </svg>
+
+      <span class="sr-only">
+        Réglages de lecture
+      </span>
+
+    </button>
+
+    <button
+      class="wp-btn"
+      type="button"
+      data-cast
+      hidden
+      title="Diffuser sur un appareil"
+    >
+
+      <svg
+        class="icon"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <use href="assets/icons/sprite.svg?v=20261007b#cast"></use>
+      </svg>
+
+      <span class="sr-only">
+        Diffuser sur un autre appareil
+      </span>
+
+    </button>
+
+    <button
+      class="wp-btn"
+      type="button"
+      data-pip
+      hidden
+      title="Image dans l'image"
+    >
+
+      <svg
+        class="icon"
+        aria-hidden="true"
+        focusable="false"
+      >
+        <use href="assets/icons/sprite.svg?v=20261007b#pip"></use>
+      </svg>
+
+      <span class="sr-only">
+        Image dans l'image
+      </span>
+
+    </button>
+
+    <button
+      class="wp-btn"
+      type="button"
+      data-fullscreen
+    ></button>
+
+  </div>
+
+  <div
+    class="wp-sources"
+    data-sources
+    hidden
+  >
+
+    <div class="wp-source-row">
+
+      <span
+        class="wp-source-label"
+        aria-hidden="true"
+      >
+        Langue :
+      </span>
+
+      <div
+        class="wp-chips"
+        role="group"
+        aria-label="Langue"
+        data-langs
+      ></div>
+
+    </div>
+
+    <div class="wp-source-row">
+
+      <span
+        class="wp-source-label"
+        aria-hidden="true"
+      >
+        Lecteur :
+      </span>
+
+      <div
+        class="wp-chips"
+        role="group"
+        aria-label="Lecteur"
+        data-hosts
+      ></div>
+
+    </div>
+
+    <div class="wp-source-actions">
+
+      <button
+        class="wp-link-btn"
+        type="button"
+        data-other-source
+        hidden
+      >
+
+        <svg
+          class="icon"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <use href="assets/icons/sprite.svg?v=20261007b#refresh"></use>
+        </svg>
+
+        <span>
+          Problème de lecture ? Essaie un autre lecteur
+        </span>
+
+      </button>
+
+      <button
+        class="wp-link-btn"
+        type="button"
+        data-report-source
+        hidden
+      >
+
+        <svg
+          class="icon"
+          aria-hidden="true"
+          focusable="false"
+        >
+          <use href="assets/icons/sprite.svg?v=20261007b#flag"></use>
+        </svg>
+
+        <span data-report-label>
+          Signaler un lecteur cassé
+        </span>
+
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="wrap watch-below">
+
+  <div
+    class="notice"
+    data-player-notice
+    hidden
+  ></div>
+
+  <h1
+    class="watch-title"
+    data-anime-title
+  >
+    Chargement…
+  </h1>
+
+  <p
+    class="watch-meta"
+    data-anime-meta
+  ></p>
+
+  <div
+    class="watch-actions"
+    data-anime-actions
+  ></div>
+
+  <section class="watch-episodes" data-episodes hidden aria-label="Épisodes"></section>
+
+  <p
+    class="watch-synopsis"
+    data-anime-synopsis
+    hidden
+  ></p>
+
+  <p
+    class="lang-note"
+    data-synopsis-note
+    hidden
+  ></p>
+
+</div>
+
 </main>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js" integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0=" crossorigin="anonymous"></script>
-<script src="js/supabase-config.js?v=20260926o"></script>
-<script src="js/supabase-client.js?v=20260926o"></script>
-<script src="js/premium.js?v=20260926o"></script>
-<script src="js/ui.js?v=20260926o"></script>
-<script src="js/data.js?v=20260926o"></script>
-<script src="js/preload.js?v=20260926o"></script>
-<script src="js/watchlist.js?v=20260926o"></script>
-<script src="js/api.js?v=20260926o"></script>
-<script src="js/player.js?v=20260926o"></script>
+
+<script
+  src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/dist/umd/supabase.js"
+  integrity="sha256-WdOUh8NYmEO0EDItij1WLOAiq6HlzLFomO8/sqDaLs0="
+  crossorigin="anonymous"
+></script>
+
+<script src="js/supabase-config.js?v=20261007b"></script>
+<script src="js/supabase-client.js?v=20261007b"></script>
+<script src="js/premium.js?v=20261007b"></script>
+<script src="js/ui.js?v=20261007b"></script>
+<script src="js/data.js?v=20261007b"></script>
+<script src="js/preload.js?v=20261007b"></script>
+<script src="js/watchlist.js?v=20261007b"></script>
+<script src="js/api.js?v=20261007b"></script>
+<script src="js/providers.js?v=20261007b"></script>
+<script src="js/player.js?v=20261007b"></script>
+
 </body>
 </html>

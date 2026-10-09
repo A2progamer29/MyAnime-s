@@ -3,16 +3,11 @@
   Referrer-Policy: strict-origin-when-cross-origin
   X-Frame-Options: DENY
   Permissions-Policy: camera=(), microphone=(), geolocation=(), usb=()
-  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net https://gateway.sumup.com; style-src 'self' 'unsafe-inline' https://gateway.sumup.com; img-src 'self' data: blob: https://s4.anilist.co https://i.ytimg.com https://cdn.myanimelist.net https://image.tmdb.org https://*.supabase.co https://gateway.sumup.com; font-src 'self' https://gateway.sumup.com; connect-src 'self' https://graphql.anilist.co https://*.supabase.co wss://*.supabase.co https://gateway.sumup.com https://api.sumup.com; frame-src https://gateway.sumup.com https:; media-src https://www.w3schools.com; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https:; object-src 'none'
+  Strict-Transport-Security: max-age=31536000
+  Content-Security-Policy-Report-Only: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.117.2/ https://gateway.sumup.com; style-src 'self' 'unsafe-inline' https://gateway.sumup.com; img-src 'self' data: blob: https://s4.anilist.co https://i.ytimg.com https://img.youtube.com https://cdn.myanimelist.net https://image.tmdb.org https://*.supabase.co https://gateway.sumup.com; font-src 'self' https://gateway.sumup.com; connect-src 'self' https://graphql.anilist.co https://*.supabase.co wss://*.supabase.co https://gateway.sumup.com; frame-src https://gateway.sumup.com https://www.youtube-nocookie.com https://www.youtube.com https://voe.sx https://vidmoly.to https://vidmoly.me; media-src 'self' blob: https:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'; object-src 'none'; report-uri /api/csp-report
 
 /assets/*
   Cache-Control: public, max-age=604800
 
 /assets/fonts/*
   Access-Control-Allow-Origin: *
-
-/functions/*
-  X-Robots-Tag: noindex
-
-/supabase/*
-  X-Robots-Tag: noindex

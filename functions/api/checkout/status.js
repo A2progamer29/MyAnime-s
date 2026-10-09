@@ -3,8 +3,27 @@
 // Aucun paiement n'est créé et aucune donnée n'est modifiée.
 import { json, config, getUser, db, sumup, merchantCodeInfo, merchantProblem, sumupKeyKind } from '../_lib.js';
 
+// Rôle lu avec la clé service si elle existe, sinon avec le jeton de l'utilisateur (soumis aux règles RLS)
+async function userRole(request, cfg, user) {
+  const path = `profiles?select=role&id=eq.${encodeURIComponent(user.id)}`;
+  const res = cfg.serviceKey
+    ? await db(cfg, path).catch(() => null)
+    : await fetch(`${cfg.supabaseUrl}/rest/v1/${path}`, {
+      headers: { apikey: cfg.anonKey, Authorization: request.headers.get('Authorization') || '' }
+    }).catch(() => null);
+  if (!res || !res.ok) return null;
+  const rows = await res.json().catch(() => []);
+  return Array.isArray(rows) && rows[0] ? rows[0].role : null;
+}
+
 export async function onRequestGet({ request, env }) {
   const cfg = config(env);
+
+  // Authentification et rôle admin avant tout contrôle : rien ne fuit vers un anonyme ou un membre
+  const user = await getUser(request, cfg);
+  if (!user) return json({ error: 'Connecte-toi avec un compte administrateur.' }, 401);
+  if ((await userRole(request, cfg, user)) !== 'admin') return json({ error: 'Réservé aux administrateurs.' }, 403);
+
   const checks = [];
   const add = (key, ok, text) => checks.push({ key, ok, text });
 
@@ -12,12 +31,6 @@ export async function onRequestGet({ request, env }) {
     cfg.serviceKey && cfg.sumupKey ? 'Clés SUMUP_API_KEY et SUPABASE_SERVICE_ROLE_KEY présentes.'
       : `Clé manquante : ${[!cfg.sumupKey && 'SUMUP_API_KEY', !cfg.serviceKey && 'SUPABASE_SERVICE_ROLE_KEY'].filter(Boolean).join(', ')}.`);
   if (!cfg.serviceKey) return json({ ready: false, checks });
-
-  const user = await getUser(request, cfg);
-  if (!user) return json({ error: 'Connecte-toi avec un compte administrateur.' }, 401);
-  const roleRes = await db(cfg, `profiles?select=role&id=eq.${user.id}`);
-  const [profile] = roleRes.ok ? await roleRes.json() : [];
-  if (!profile || profile.role !== 'admin') return json({ error: 'Réservé aux administrateurs.' }, 403);
 
   if (cfg.sumupKey) {
     const kind = sumupKeyKind(cfg.sumupKey);

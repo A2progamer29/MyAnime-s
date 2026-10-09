@@ -71,7 +71,7 @@ function renderMyPremium(user, st) {
     infos.push('Les clés que tu achètes ne peuvent plus s\'activer sur ton compte : garde-les pour les offrir.');
   } else {
     infos.push('Le Premium n\'est jamais renouvelé automatiquement : sans nouvelle clé, il s\'arrête à la date d\'expiration.');
-    infos.push('Pour prolonger, active une clé Soutien ou échange 1 500 Anime Coins : 30 jours s\'ajoutent à ta date d\'expiration.');
+    infos.push('Pour prolonger, active une clé Soutien ou échange tes Anime Coins contre 30, 60 ou 90 jours : ils s\'ajoutent à ta date d\'expiration.');
     infos.push('Tu peux passer à Soutien + (à vie) à tout moment ; ton accès devient alors sans limite de durée.');
   }
   infos.push('Chaque clé ne fonctionne qu\'une seule fois, sur un seul compte.');
